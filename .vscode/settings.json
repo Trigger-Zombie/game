@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Trigger Zombie.sln"
+    "dotnet.defaultSolution": "trigger_zombie.sln"
 }
