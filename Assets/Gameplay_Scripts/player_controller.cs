@@ -6,21 +6,23 @@ public class player_controller : MonoBehaviour
     private Rigidbody rb;
     private float movementX;
     private float movementY;
-    public float speed = 0;
+    public float speed = 10f;
+    public float rotationSpeed = 700f;
+
+    public GameObject winTextObject;
 
     public Camera mainCamera;
     public Camera firstPersonCamera;
 
     private bool isFirstPerson = true;
-   
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        rb = GetComponent <Rigidbody>();
-        SetCameraView(true);
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        SetCameraView(true); // default to first person
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Keyboard.current.cKey.wasPressedThisFrame) // press 'C' to toggle view
@@ -30,21 +32,28 @@ public class player_controller : MonoBehaviour
         }
     }
 
-     void OnMove (InputValue movementValue)
-    {    
-        
+    void OnMove(InputValue movementValue)
+    {
         Vector2 movementVector = movementValue.Get<Vector2>();
-        movementX = movementVector.x; 
+        movementX = movementVector.x;
         movementY = movementVector.y;
     }
 
-    private void FixedUpdate() 
-   {
+    private void FixedUpdate()
+    {
         Vector3 move = transform.right * movementX + transform.forward * movementY;
-        rb.AddForce(move * speed);
-        
-   }
-   private void SetCameraView(bool firstPerson)
+
+        rb.linearVelocity = new Vector3(move.x * speed, rb.linearVelocity.y, move.z * speed);
+
+        // Optional: rotate the player to match movement direction (if you want to rotate smoothly)
+       /* if (move.magnitude > 0.1f)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }*/
+    }
+
+    private void SetCameraView(bool firstPerson)
     {
         mainCamera.enabled = !firstPerson;
         firstPersonCamera.enabled = firstPerson;
