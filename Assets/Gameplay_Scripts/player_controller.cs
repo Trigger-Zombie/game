@@ -13,6 +13,7 @@ public class player_controller : MonoBehaviour
 
     public Camera mainCamera;
     public Camera firstPersonCamera;
+    public TimeManager timeManager;
 
     private bool isFirstPerson = true;
 
@@ -30,6 +31,10 @@ public class player_controller : MonoBehaviour
             isFirstPerson = !isFirstPerson;
             SetCameraView(isFirstPerson);
         }
+        if(Input.GetKeyDown("q"))
+        {
+            timeManager.DoSlowMotion();
+        }
     }
 
     void OnMove(InputValue movementValue)
@@ -43,8 +48,8 @@ public class player_controller : MonoBehaviour
     {
         Vector3 move = transform.right * movementX + transform.forward * movementY;
 
-        rb.linearVelocity = new Vector3(move.x * speed, rb.linearVelocity.y, move.z * speed);
-
+        float actualSpeed = speed / Time.timeScale;
+        rb.linearVelocity = new Vector3(move.x * actualSpeed, rb.linearVelocity.y, move.z * actualSpeed);
         // Optional: rotate the player to match movement direction (if you want to rotate smoothly)
        /* if (move.magnitude > 0.1f)
         {
