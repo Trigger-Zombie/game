@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class MouseLook : MonoBehaviour
 {
-    public float mouseSensitivity = 100f;
+    public float mouseSensitivity = 50f;
     public Transform playerBody; // This should be your player object
 
     float xRotation = 0f;
@@ -16,8 +16,8 @@ public class MouseLook : MonoBehaviour
 {
     if (Mouse.current == null) return;
 
-    float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity * Time.deltaTime;
-    float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity * Time.deltaTime;
+    float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
+    float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
 
     xRotation -= mouseY;
     xRotation = Mathf.Clamp(xRotation, -90f, 90f);
