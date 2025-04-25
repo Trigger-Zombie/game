@@ -9307,6 +9307,7 @@ MonoBehaviour:
   winTextObject: {fileID: 0}
   mainCamera: {fileID: 330585545}
   firstPersonCamera: {fileID: 1618324249}
+  timeManager: {fileID: 0}
 --- !u!54 &1594672426
 Rigidbody:
   m_ObjectHideFlags: 0
