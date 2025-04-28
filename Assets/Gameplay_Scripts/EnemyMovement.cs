@@ -9,6 +9,12 @@ public class EnemyMovement : MonoBehaviour
     private bool isMoving = false;
     private bool attacking;
     public int zombieSpeed = 4;
+    private zombieHitbox AmAlive;
+
+    private player_controller playerController; 
+    public float damageAmount = 10f;
+    
+
     void Start()
     {
         attacking = false;
@@ -16,12 +22,47 @@ public class EnemyMovement : MonoBehaviour
         zombAnimator = GetComponent<Animator>();
         navMeshAgent.updateRotation = true;
         navMeshAgent.angularSpeed = 180f; // Increase rotation speed
+        
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player").transform; // Assuming the player has the tag "Player"
+        }
+        
+        if (player != null)
+        {
+            playerController = player.GetComponent<player_controller>();
+            if (playerController == null)
+            {
+                Debug.LogError("player_controller script not found on player object.");
+            }
+        }
+        
+        Transform zombieHealthbox = transform.Find("ZombieMesh");
+
+        if (zombieHealthbox != null)
+        {
+            // Get the amIAliveScript component attached to the amIAlive object
+            AmAlive = zombieHealthbox.GetComponent<zombieHitbox>();
+
+            if (AmAlive == null)
+            {
+                Debug.LogError("ChildScript not found on the child object.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Child object not found.");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+        if(!AmAlive.alive){
+            Destroy(gameObject);
+        }
+
         if(player != null)
         {
             navMeshAgent.SetDestination(player.position);
@@ -53,10 +94,17 @@ public class EnemyMovement : MonoBehaviour
                 isMoving = true;
             }
         }
+
+
     }
 
     public void OnAnimationComplete()
     {
+        if (playerController != null)
+        {
+            playerController.TakeDamage(damageAmount);  // Apply damage to player
+        }
+
         navMeshAgent.speed = zombieSpeed;
         isMoving = false;
         attacking = false;
@@ -65,7 +113,7 @@ public class EnemyMovement : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         if(other.CompareTag("Player")){
-            Debug.Log("Attempting Hit");
+            //Debug.Log("Attempting Hit");
             if(!attacking)
             {
                 navMeshAgent.speed = 0;
@@ -79,4 +127,5 @@ public class EnemyMovement : MonoBehaviour
     {
         attacking = false;
     }
+
 }

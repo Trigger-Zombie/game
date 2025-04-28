@@ -14,8 +14,9 @@ public class player_controller : MonoBehaviour
     public Camera mainCamera;
     public Camera firstPersonCamera;
     public TimeManager timeManager;
-
     private bool isFirstPerson = true;
+
+    public float health = 100f;
 
     void Start()
     {
@@ -62,5 +63,16 @@ public class player_controller : MonoBehaviour
     {
         mainCamera.enabled = !firstPerson;
         firstPersonCamera.enabled = firstPerson;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        Debug.Log("Player health: " + health);
+
+        if (health <= 0)
+        {
+            Debug.Log("Player has died.");
+        }
     }
 }
