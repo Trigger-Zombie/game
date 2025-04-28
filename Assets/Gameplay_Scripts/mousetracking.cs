@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class MouseLook : MonoBehaviour
 {
+    
     public float mouseSensitivity = 50f;
-    public Transform playerBody; // This should be your player object
+    public Transform playerBody; //player object
 
     float xRotation = 0f;
+    private float yRotation = 0f; 
 
     void Start()
     {
@@ -13,16 +15,22 @@ public class MouseLook : MonoBehaviour
     }
 
     void Update()
-{
-    if (Mouse.current == null) return;
+    {
+        if (Mouse.current == null) return;
 
-    float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
-    float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
+        // Get mouse movement
+        float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
+        float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensitivity * Time.unscaledDeltaTime;
 
-    xRotation -= mouseY;
-    xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-    
-    transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-    playerBody.Rotate(Vector3.up * mouseX);
-}
+        // Update camera's x-rotation (pitch)
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        
+        // Apply rotation to camera
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        // Update the player’s body rotation (yaw)
+        yRotation += mouseX;
+        playerBody.rotation = Quaternion.Euler(0f, yRotation, 0f); // Rotate only along the y-axis (yaw)
+    }
 }
