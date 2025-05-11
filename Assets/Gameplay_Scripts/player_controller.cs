@@ -16,13 +16,17 @@ public class player_controller : MonoBehaviour
     public TimeManager timeManager;
     private bool isFirstPerson = true;
 
-    public float health = 100f;
+    public HealthBar healthBar;
+    public int maxHealth = 100;
+    public int currentHealth;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         SetCameraView(true); // default to first person
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     void Update()
@@ -65,12 +69,15 @@ public class player_controller : MonoBehaviour
         firstPersonCamera.enabled = firstPerson;
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        health -= damage;
-        Debug.Log("Player health: " + health);
+        currentHealth -= damage;
 
-        if (health <= 0)
+        healthBar.SetHealth(currentHealth);
+
+        Debug.Log("Player health: " + currentHealth);
+
+        if (currentHealth <= 0)
         {
             Debug.Log("Player has died.");
         }
