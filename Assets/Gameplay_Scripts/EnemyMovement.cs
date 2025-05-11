@@ -12,7 +12,7 @@ public class EnemyMovement : MonoBehaviour
     private zombieHitbox AmAlive;
 
     private player_controller playerController; 
-    public float damageAmount = 10f;
+    public int damageAmount = 10;
     
 
     void Start()
