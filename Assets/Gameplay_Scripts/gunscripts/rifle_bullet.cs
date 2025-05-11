@@ -21,6 +21,13 @@ public class rifle_bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {   
+
+        if (collision.gameObject.CompareTag("Bullet"))
+    {
+        // Ignore collision if the other object is a bullet
+        return;
+    }
+    
         Debug.Log("Collided with: " + collision.gameObject.name);
         // Directly check if the collided object implements IDamageCapable
         IDamageCapable target = collision.gameObject.GetComponent<IDamageCapable>();

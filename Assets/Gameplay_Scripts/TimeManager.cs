@@ -6,7 +6,7 @@ public class TimeManager : MonoBehaviour
     public float slowDownFactor = 0.05f;
     public float slowDownLength = 5f;
     private float startTime = -1;
-
+    public bool slowActivated = false;
      public AudioSource slowMoSound;
     void Update()
     {
@@ -27,6 +27,7 @@ public class TimeManager : MonoBehaviour
                 {
                     Time.timeScale = 1f;
                     startTime = -1f;
+                    slowActivated = false;
                 }
             }
         }
@@ -37,6 +38,7 @@ public class TimeManager : MonoBehaviour
         if(slowMoSound != null){
             slowMoSound.Play();
         }
+        slowActivated = true;
         Time.timeScale = slowDownFactor; //slows down game time
         Time.fixedDeltaTime = Time.timeScale * .02f; //increases the update time of fixed update so physics are smoother
         startTime = Time.realtimeSinceStartup;
