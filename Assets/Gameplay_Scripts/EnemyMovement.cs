@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
     private player_controller playerController; 
     public int damageAmount = 10;
     
-
+    public CoinManager coinManager;
     void Start()
     {
         attacking = false;
@@ -58,10 +58,19 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if(!AmAlive.alive){
+        if (!AmAlive.alive)
+        {
+            CoinManager coinManager = FindFirstObjectByType<CoinManager>();
+            if (coinManager != null)
+            {
+                coinManager.AddCoin(1);
+            }
+
             Destroy(gameObject);
         }
+        // if(!AmAlive.alive){
+        //     Destroy(gameObject);
+        // }
 
         if(player != null)
         {
