@@ -13,9 +13,13 @@ public class shotgunScript : MonoBehaviour
     public int pelletCount = 10; // Number of pellets per shot
     public float spreadAngle = 5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public AudioClip shootClip; // Audio file to play
+    private AudioSource audioSource;
+
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -31,7 +35,8 @@ public class shotgunScript : MonoBehaviour
     }
 
     void Shoot()
-    {   Debug.DrawRay(firePoint.position, firePoint.forward * 2f, Color.red, 2f);
+    {   //Debug.DrawRay(firePoint.position, firePoint.forward * 2f, Color.red, 2f);
+
         for (int i = 0; i < pelletCount; i++)
     {   /*
         // Calculate random spread
@@ -51,6 +56,10 @@ public class shotgunScript : MonoBehaviour
         
     }
 
+    if (shootClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootClip);
+        }
     muzzleFlash.SetActive(true);
     Invoke(nameof(HideMuzzleFlash), 0.05f);
     }

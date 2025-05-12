@@ -10,11 +10,14 @@ public class riflescript : MonoBehaviour
     private TimeManager timeManager;
     public float fireRate = 0.2f;
     private float nextTimeToFire = 0f;
+    public AudioClip shootClip; // Audio file to play
+    private AudioSource audioSource;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
          timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+         audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,7 +36,10 @@ public class riflescript : MonoBehaviour
     void Shoot()
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-
+        if (shootClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootClip);
+        }
         //Quaternion correctedRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, 0f);
         //GameObject flash = Instantiate(mussleFlash, firePoint.position, correctedRotation);
 
