@@ -19,6 +19,8 @@ public class player_controller : MonoBehaviour
     public HealthBar healthBar;
     public int maxHealth = 100;
     public int currentHealth;
+    public GameObject[] gunSlots = new GameObject[2]; // Slot 0 = Key 1, Slot 1 = Key 2
+    private int currentGunIndex = 0;
 
     void Start()
     {
@@ -40,6 +42,8 @@ public class player_controller : MonoBehaviour
         {
             timeManager.DoSlowMotion();
         }
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) Equip(0);
+        if (Keyboard.current.digit2Key.wasPressedThisFrame) Equip(1);
     }
 
     void OnMove(InputValue movementValue)
@@ -82,4 +86,23 @@ public class player_controller : MonoBehaviour
             Debug.Log("Player has died.");
         }
     }
+
+    void Equip(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= gunSlots.Length) return;
+
+        // Disable all guns first
+        foreach (var gun in gunSlots)
+        {
+            if (gun != null) gun.SetActive(false);
+        }
+
+        // Enable the selected one
+        if (gunSlots[slotIndex] != null)
+        {
+            gunSlots[slotIndex].SetActive(true);
+            currentGunIndex = slotIndex;
+        }
+    }
+
 }

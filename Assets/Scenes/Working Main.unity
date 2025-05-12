@@ -8639,6 +8639,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShotGun
       objectReference: {fileID: 0}
+    - target: {fileID: 3386410420330673314, guid: 806a0621b66360b499a41de9ca339cb3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4532367524758444092, guid: 806a0621b66360b499a41de9ca339cb3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.255
@@ -8684,6 +8688,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 806a0621b66360b499a41de9ca339cb3, type: 3}
+--- !u!1 &1368031699 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3386410420330673314, guid: 806a0621b66360b499a41de9ca339cb3, type: 3}
+  m_PrefabInstance: {fileID: 1368031698}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1368979190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10377,6 +10386,9 @@ MonoBehaviour:
   healthBar: {fileID: 399377180}
   maxHealth: 100
   currentHealth: 0
+  gunSlots:
+  - {fileID: 2104088693}
+  - {fileID: 1368031699}
 --- !u!54 &1594672426
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14636,13 +14648,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4470248391977660851, guid: 960d875c6c4c96648a05dacce2af0758, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 960d875c6c4c96648a05dacce2af0758, type: 3}
+--- !u!1 &2104088693 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4470248391977660851, guid: 960d875c6c4c96648a05dacce2af0758, type: 3}
+  m_PrefabInstance: {fileID: 2104088692}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2114598715
 PrefabInstance:
   m_ObjectHideFlags: 0
