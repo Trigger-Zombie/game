@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
     private player_controller playerController; 
     public int damageAmount = 10;
     
-    public CoinManager coinManager;
+    // public CoinManager coinManager;
     void Start()
     {
         attacking = false;
@@ -60,11 +60,11 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!AmAlive.alive)
         {
-            CoinManager coinManager = FindFirstObjectByType<CoinManager>();
-            if (coinManager != null)
-            {
-                coinManager.AddCoin(1);
-            }
+            // CoinManager coinManager = FindFirstObjectByType<CoinManager>();
+            // if (coinManager != null)
+            // {
+            CoinManager.Instance.AddCoin(1);
+            // }
 
             Destroy(gameObject);
         }

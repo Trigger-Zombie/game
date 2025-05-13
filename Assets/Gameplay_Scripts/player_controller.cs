@@ -73,19 +73,30 @@ public class player_controller : MonoBehaviour
         firstPersonCamera.enabled = firstPerson;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int amount)
+{
+    currentHealth -= amount;
+
+    // Clamp between 0 and maxHealth
+    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+    healthBar.SetHealth(currentHealth);
+
+    if (amount > 0)
     {
-        currentHealth -= damage;
-
-        healthBar.SetHealth(currentHealth);
-
-        Debug.Log("Player health: " + currentHealth);
-
+        Debug.Log("Took damage: " + amount);
         if (currentHealth <= 0)
         {
             Debug.Log("Player has died.");
+            // Add death logic here
         }
     }
+    else if (amount < 0)
+    {
+        Debug.Log("Healed: " + Mathf.Abs(amount));
+        // Optional: add healing effects here
+    }
+}
 
     void Equip(int slotIndex)
     {
