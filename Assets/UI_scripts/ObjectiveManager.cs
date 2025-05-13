@@ -3,13 +3,15 @@ using UnityEngine;
 public class ObjectiveManager : MonoBehaviour
 {
     public GameObject beamPrefab;
-    public Transform beamSpawnPoint;  // 👈 NEW: Drag BeamSpawnPoint into this in the Inspector
+    public Transform beamSpawnPoint;  
     public float spawnDelay = 5f;
     public float objectiveTime = 20f;
 
     private GameObject currentBeam;
     private float timer;
     private bool timerRunning = false;
+    public GameObject objectiveUI;// for objective text top left
+    // public CoinManager coinManager;
 
     void Start()
     {
@@ -17,19 +19,24 @@ public class ObjectiveManager : MonoBehaviour
     }
 
     void Update()
+{
+    if (timerRunning)
     {
-        if (timerRunning)
-        {
-            timer -= Time.deltaTime;
+        timer -= Time.deltaTime;
 
-            if (timer <= 0f)
+        if (timer <= 0f)
+        {
+            Destroy(currentBeam);
+            timerRunning = false;
+            Debug.Log("Objective failed (timer ran out).");
+
+            if (objectiveUI != null)
             {
-                Destroy(currentBeam);
-                timerRunning = false;
-                Debug.Log("Objective failed (timer ran out).");
+                objectiveUI.SetActive(false); // ✅ Hide objective UI if player fails
             }
         }
     }
+}
 
     void SpawnBeam()
     {
@@ -40,6 +47,20 @@ public class ObjectiveManager : MonoBehaviour
         }
 
         currentBeam = Instantiate(beamPrefab, beamSpawnPoint.position, beamSpawnPoint.rotation);
+        BeamObjective beamScript = currentBeam.GetComponent<BeamObjective>();
+         if (beamScript != null && objectiveUI != null)
+        {
+            beamScript.objectiveUI = objectiveUI;
+        }
+        
+        if (objectiveUI != null)
+        {
+            objectiveUI.SetActive(true); // ✅ Show the objective
+        }
+        // if (beamScript != null)
+        // {
+        //     beamScript.coinManager = coinManager;
+        // }
         timer = objectiveTime;
         timerRunning = true;
     }
