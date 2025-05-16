@@ -21,25 +21,36 @@ public class BeamObjective : MonoBehaviour
 
             if (CoinManager.Instance != null)
             {
-                CoinManager.Instance.AddCoin(99);
+                CoinManager.Instance.AddCoin(149);
             }
             else
             {
                 Debug.LogWarning("CoinManager reference is missing!");
             }
+
             if (objectiveUI != null)
             {
                 objectiveUI.SetActive(false);
             }
+
+            // Immediately disable the collider and visuals
+            Collider col = GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer rend in renderers)
+            {
+                rend.enabled = false;
+            }
+
             if (destroyAudioSource != null && destroyAudioSource.clip != null)
             {
                 destroyAudioSource.Play();
-                Destroy(gameObject, destroyAudioSource.clip.length); // wait for sound
+                Destroy(gameObject, destroyAudioSource.clip.length); // Delay actual destruction
             }
             else
             {
-
-            Destroy(gameObject); // Remove the beam when collected
+                Destroy(gameObject); // No sound, destroy instantly
             }
         }
     }
