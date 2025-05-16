@@ -17,6 +17,12 @@ public class shotgunScript : MonoBehaviour
     public AudioClip shootClip; // Audio file to play
     private AudioSource audioSource;
 
+    public float totalAmmo = 30f;
+
+    public float clipAmount = 5f;
+
+    public float clipSize = 5f;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -29,8 +35,22 @@ public class shotgunScript : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
-            nextTimeToFire = Time.unscaledTime + fireRate;
-            Shoot();
+            if (clipAmount > 0)
+            {
+
+                nextTimeToFire = Time.unscaledTime + fireRate;
+                clipAmount -= 1;
+                Shoot();
+            }
+            else
+            {
+                Debug.Log("Out of ammo in clip. Press R to reload.");
+            }
+        }
+
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            Reload();
         }
     }
 
@@ -38,7 +58,7 @@ public class shotgunScript : MonoBehaviour
     {   //Debug.DrawRay(firePoint.position, firePoint.forward * 2f, Color.red, 2f);
 
         for (int i = 0; i < pelletCount; i++)
-    {   /*
+        {   /*
         // Calculate random spread
         float angleY = Random.Range(-spreadAngle, spreadAngle);
         float angleX = Random.Range(-spreadAngle, spreadAngle);
@@ -48,24 +68,46 @@ public class shotgunScript : MonoBehaviour
         // Instantiate the bullet at the firePoint position and give it the spread direction
         GameObject pellet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(spreadDirection));
         */
-        Vector3 randomDirection = Quaternion.AngleAxis(
-        Random.Range(0f, spreadAngle), 
-        Random.insideUnitSphere) * firePoint.forward;
+            Vector3 randomDirection = Quaternion.AngleAxis(
+            Random.Range(0f, spreadAngle),
+            Random.insideUnitSphere) * firePoint.forward;
 
-        GameObject pellet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(randomDirection));
-        
-    }
+            GameObject pellet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(randomDirection));
 
-    if (shootClip != null && audioSource != null)
+        }
+
+        if (shootClip != null && audioSource != null)
         {
             audioSource.PlayOneShot(shootClip);
         }
-    muzzleFlash.SetActive(true);
-    Invoke(nameof(HideMuzzleFlash), 0.05f);
+        muzzleFlash.SetActive(true);
+        Invoke(nameof(HideMuzzleFlash), 0.05f);
     }
 
     void HideMuzzleFlash()
     {
         muzzleFlash.SetActive(false);
     }
+    
+    void Reload()
+{
+    // If clip is already full or no spare ammo, do nothing
+    if (clipAmount >= clipSize || totalAmmo <= 0) return;
+
+    float neededAmmo = clipSize - clipAmount;
+
+    if (totalAmmo >= neededAmmo)
+    {
+        clipAmount += neededAmmo;
+        totalAmmo -= neededAmmo;
+    }
+    else
+    {
+        // Not enough to fully reload
+        clipAmount += totalAmmo;
+        totalAmmo = 0;
+    }
+
+    Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
+}
 }
