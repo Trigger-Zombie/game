@@ -3,9 +3,21 @@ using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
+    public static CoinManager Instance;
     public int coinCount = 0;
     public TextMeshProUGUI coinText;
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     void Start()
     {
         Debug.Log("CoinManager starting with coinCount = " + coinCount);
@@ -28,12 +40,5 @@ public class CoinManager : MonoBehaviour
             Debug.Log("UI Updated: Gold: " + coinCount);
         }
     }
-    void Update()
-    {
-    if (Input.GetKeyDown(KeyCode.G))  // press G to simulate a coin pickup
-    {
-        AddCoin(1);
-    }
-}
 }
 

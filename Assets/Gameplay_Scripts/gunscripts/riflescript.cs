@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Xml.Schema;
 public class riflescript : MonoBehaviour
 {
     public GameObject bulletPrefab;
@@ -10,11 +11,20 @@ public class riflescript : MonoBehaviour
     private TimeManager timeManager;
     public float fireRate = 0.2f;
     private float nextTimeToFire = 0f;
+    public AudioClip shootClip; // Audio file to play
+    private AudioSource audioSource;
+
+    public float totalAmmo = 150f;
+
+    public float clipAmount = 25f;
+
+    public float clipSize = 25f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
          timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+         audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,26 +34,59 @@ public class riflescript : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
-            
-            nextTimeToFire = Time.unscaledTime + fireRate;
-            Shoot();
+
+            if (clipAmount > 0){
+
+                nextTimeToFire = Time.unscaledTime + fireRate;
+                clipAmount -= 1;
+                Shoot();
+            }
+            else
+            {
+                Debug.Log("Out of ammo in clip. Press R to reload.");
+            }
+        }
+        
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            Reload();
         }
     }
 
     void Shoot()
     {
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            if (shootClip != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(shootClip);
+            }
 
-        //Quaternion correctedRotation = firePoint.rotation * Quaternion.Euler(0f, 0f, 0f);
-        //GameObject flash = Instantiate(mussleFlash, firePoint.position, correctedRotation);
-
-        //GameObject flash = Instantiate(muzzleFlash, firePoint.position, muzzleFlash.transform.rotation);
-
-        //GameObject flash = Instantiate(mussleFlash, firePoint.position, Quaternion.LookRotation(firePoint.forward, firePoint.up));
-        StartCoroutine(MuzzleFlashRoutine());
+            StartCoroutine(MuzzleFlashRoutine());
 
         //Destroy(flash, 0.1f);
     }
+
+    void Reload()
+{
+    // If clip is already full or no spare ammo, do nothing
+    if (clipAmount >= clipSize || totalAmmo <= 0) return;
+
+    float neededAmmo = clipSize - clipAmount;
+
+    if (totalAmmo >= neededAmmo)
+    {
+        clipAmount += neededAmmo;
+        totalAmmo -= neededAmmo;
+    }
+    else
+    {
+        // Not enough to fully reload
+        clipAmount += totalAmmo;
+        totalAmmo = 0;
+    }
+
+    Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
+}
 
     private IEnumerator MuzzleFlashRoutine()
     {
