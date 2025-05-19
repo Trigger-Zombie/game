@@ -7,6 +7,8 @@ public class shotgun_bullet : MonoBehaviour
     public float damage = 10f;   // less damage per pellet
 
     private Rigidbody rb;
+
+    
     void Start()
     {
         GetComponent<Rigidbody>().linearVelocity = transform.forward * speed;
@@ -32,17 +34,17 @@ public class shotgun_bullet : MonoBehaviour
         // Ignore collision if the other object is a bullet
         return;
     }
-        Debug.Log("Shotgun pellet collided with: " + collision.gameObject.name);
+        //Debug.Log("Shotgun pellet collided with: " + collision.gameObject.name);
         IDamageCapable target = collision.gameObject.GetComponent<IDamageCapable>();
         
         if (target != null)
         {
-            Debug.Log("Pellet hit a damageable object, applying damage");
+            //Debug.Log("Pellet hit a damageable object, applying damage");
             target.TakeDMG(damage);
         }
         else
         {
-            Debug.Log("Pellet hit something else.");
+            //Debug.Log("Pellet hit something else.");
         }
 
         Destroy(gameObject);

@@ -9,10 +9,7 @@ TagManager:
   - Bullet
   - Ground
   - Perk
-  - Gun
-  - SciFI Gun
-  - Rifle
-  - Shotgun
+  - Soda
   layers:
   - Default
   - TransparentFX

@@ -8,6 +8,10 @@ public class ChestInteraction : MonoBehaviour
     public GameObject chestPromptUI;
     public float lookDistance = 5f;
     public GunCycler gunCycler;
+
+    private bool chestOpened = false;
+    private bool gunAvailable = false;
+
     void Update()
     {
         Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
@@ -34,8 +38,14 @@ public class ChestInteraction : MonoBehaviour
                         {
                             chestAudio.Play();
                         }
-                        GunCycler gunCycler = hit.collider.GetComponentInChildren<GunCycler>();
+                        //GunCycler gunCycler = hit.collider.GetComponentInChildren<GunCycler>();
+                        if (gunCycler == null)
+                            {
+                                gunCycler = hit.collider.GetComponentInChildren<GunCycler>();
+                            }
                         gunCycler?.StartCycling(); // safe call if not null
+                        chestOpened = true;
+                        Invoke(nameof(MakeGunAvailable), gunCycler.totalCycleTime + 0.5f);
                     }
                     else
                     {
@@ -43,9 +53,27 @@ public class ChestInteraction : MonoBehaviour
                         // Optional: Show a "not enough gold" message on UI
                     }
                 }
+
+                if (chestOpened && Input.GetKeyDown(KeyCode.F))
+                {
+                    GameObject player = GameObject.FindWithTag("Player");
+                    var playerController = player.GetComponent<player_controller>();
+
+                    if (gunCycler.finalGunPrefab != null)
+                    {
+                        playerController.PickupGun(gunCycler.finalGunPrefab);
+                        Destroy(gunCycler.currentGunInstance); // remove the preview gun
+                        gunCycler.finalGunPrefab = null; // clear it so you don't pick it up again
+                        Debug.Log("Picked up gun from chest.");
+                    }
+                }
                 return;
             }
         }
         chestPromptUI.SetActive(false);
+    }
+    void MakeGunAvailable()
+    {
+        gunAvailable = true;
     }
 }
