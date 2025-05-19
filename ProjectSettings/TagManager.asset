@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Ground
   - Perk
+  - Soda
   layers:
   - Default
   - TransparentFX
