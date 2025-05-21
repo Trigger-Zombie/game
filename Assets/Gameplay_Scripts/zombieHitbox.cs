@@ -3,7 +3,7 @@ using UnityEngine;
 public class zombieHitbox : MonoBehaviour, IDamageCapable
 {
     public float zombieHealth = 100;
-
+    public WaveManager waveManager;
     public bool alive = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

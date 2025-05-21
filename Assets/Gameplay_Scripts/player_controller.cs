@@ -118,7 +118,7 @@ public class player_controller : MonoBehaviour
         }
     }
     
-     public void PickupGun(GameObject newGun){ // use playerControllerRef.PickupGun(gunPrefab); from a source to let the gun pickup
+    public void PickupGun(GameObject newGun){ // use playerControllerRef.PickupGun(gunPrefab); from a source to let the gun pickup
         // Find the first empty slot, or overwrite the currently equipped one
         int targetSlot = -1;
         for (int i = 0; i < gunSlots.Length; i++)

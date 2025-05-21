@@ -1,29 +1,29 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 public class ObjectiveManager : MonoBehaviour
 {
     public GameObject beamPrefab;
-    public List<Transform> beamSpawnPoints;  // 🔁 New list of spawn points
+    public Transform beamSpawnPoint;
     public float spawnDelay = 5f;
     public float objectiveTime = 20f;
 
-    public GameObject objectiveUI;
-    public TextMeshProUGUI objectiveText;
-
+    public GameObject objectiveUI; // for objective panel
+    public TextMeshProUGUI objectiveText; // the text that shows the message
     private string baseObjectiveText;
+
     private GameObject currentBeam;
     private float timer;
     private bool timerRunning = false;
 
-    private int currentObjectiveIndex = 0;
-
     void Start()
     {
         if (objectiveText != null)
-            baseObjectiveText = objectiveText.text;
+        {
+            baseObjectiveText = objectiveText.text; // Store the starting message
+        }
 
+        Invoke("SpawnBeam", spawnDelay);
     }
 
     void Update()
@@ -33,56 +33,57 @@ public class ObjectiveManager : MonoBehaviour
             timer -= Time.deltaTime;
 
             if (objectiveText != null)
-                objectiveText.text = $"{baseObjectiveText}\nTime Left: {Mathf.CeilToInt(timer)}";
+            {
+                int secondsLeft = Mathf.CeilToInt(timer);
+                objectiveText.text = $"{baseObjectiveText}\nTime Left: {secondsLeft}";
+            }
 
             if (timer <= 0f)
             {
                 Destroy(currentBeam);
                 timerRunning = false;
-                Debug.Log("Objective failed.");
+                Debug.Log("Objective failed (timer ran out).");
 
                 if (objectiveUI != null)
+                {
                     objectiveUI.SetActive(false);
+                }
 
                 if (objectiveText != null)
-                    objectiveText.text = baseObjectiveText;
+                {
+                    objectiveText.text = baseObjectiveText; // Reset to original
+                }
             }
         }
     }
 
-    public void SpawnNextObjective()
+    void SpawnBeam()
     {
-        if (beamSpawnPoints.Count == 0)
+        if (beamSpawnPoint == null)
         {
-            Debug.LogWarning("No beam spawn points assigned!");
+            Debug.LogWarning("Beam spawn point is not assigned!");
             return;
         }
 
-        // Wrap around when out of bounds
-        int index = currentObjectiveIndex % beamSpawnPoints.Count;
-        Transform spawnPoint = beamSpawnPoints[index];
-
-        if (spawnPoint == null || beamPrefab == null)
-        {
-            Debug.LogWarning("Missing spawn point or beam prefab!");
-            return;
-        }
-
-        currentBeam = Instantiate(beamPrefab, spawnPoint.position, spawnPoint.rotation);
+        currentBeam = Instantiate(beamPrefab, beamSpawnPoint.position, beamSpawnPoint.rotation);
         BeamObjective beamScript = currentBeam.GetComponent<BeamObjective>();
 
         if (beamScript != null && objectiveUI != null)
+        {
             beamScript.objectiveUI = objectiveUI;
+        }
 
         if (objectiveUI != null)
+        {
             objectiveUI.SetActive(true);
+        }
 
         if (objectiveText != null)
+        {
             objectiveText.text = $"{baseObjectiveText}\nTime Left: {Mathf.CeilToInt(objectiveTime)}s";
+        }
 
         timer = objectiveTime;
         timerRunning = true;
-
-        currentObjectiveIndex++; // ✅ Always increment
     }
 }
