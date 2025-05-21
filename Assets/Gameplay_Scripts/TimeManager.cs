@@ -12,38 +12,26 @@ public class TimeManager : MonoBehaviour
     private float cooldownTimer = 0f;
 
     public bool perkUnlocked = false;
-    private bool perkReady = false;
-
-    public AudioSource slowMoSound;
-    public AudioClip readySound;
+    private bool hasWarmedUp = false;
+    private bool isWarmingUp = false;
+    public bool perkReady = false;
 
     public float readyTextDelay = 0.5f;
     public float readyUISwitchDelay = 14f;
 
     public TextMeshProUGUI cooldownText;
 
-    private bool wasReadyLastFrame = false;
     private float readyTextTimer = 0f;
     private float readyUIHoldTimer = 0f;
 
-    // 🎥 Camera shake
-    public Transform cameraTransform;
-    public float shakeIntensity = 0.1f;
-    public float shakeFrequency = 20f;
-    private Vector3 originalCamPos;
+    [Header("Audio")]
+    public AudioSource slowMoAudioSource;
+    public AudioClip slowMoSound;
 
     void Start()
     {
         if (cooldownText != null)
-        {
             cooldownText.text = "Slow-mo: Locked";
-        }
-
-        // Assign camera if not set
-        if (cameraTransform == null)
-            cameraTransform = Camera.main.transform;
-
-        originalCamPos = cameraTransform.localPosition;
     }
 
     void Update()
@@ -52,37 +40,20 @@ public class TimeManager : MonoBehaviour
         {
             if (cooldownText != null)
                 cooldownText.text = "Slow-mo: Locked";
-
-            wasReadyLastFrame = false;
-            perkReady = false;
             return;
         }
 
-        if (cooldownTimer > 0f)
+        // Initial warm-up phase (only once)
+        if (!hasWarmedUp)
         {
-            cooldownTimer -= Time.unscaledDeltaTime;
+            if (!isWarmingUp)
+            {
+                StartWarmUp();
+            }
+
             if (cooldownText != null)
-            {
-                cooldownText.text = $"Slow-mo: {Mathf.CeilToInt(cooldownTimer)}s";
-            }
-            wasReadyLastFrame = false;
-        }
-        else if (!slowActivated)
-        {
-            // 🔊 Play ready sound once
-            if (!wasReadyLastFrame)
-            {
-                if (readySound != null && slowMoSound != null)
-                {
-                    slowMoSound.PlayOneShot(readySound);
-                    Debug.Log("🔊 Played slow-mo ready sound.");
-                }
+                cooldownText.text = "Slow-mo: Locked";
 
-                readyTextTimer = readyTextDelay;
-                readyUIHoldTimer = readyUISwitchDelay;
-            }
-
-            // ⏱ Wait before showing "Ready"
             if (readyTextTimer > 0f)
             {
                 readyTextTimer -= Time.unscaledDeltaTime;
@@ -90,43 +61,44 @@ public class TimeManager : MonoBehaviour
             else if (readyUIHoldTimer > 0f)
             {
                 readyUIHoldTimer -= Time.unscaledDeltaTime;
-
-                // 🎥 Shake camera
-                if (cameraTransform != null)
-                {
-                    float shakeAmount = Mathf.Sin(Time.time * shakeFrequency) * shakeIntensity;
-                    Vector3 shakeOffset = new Vector3(shakeAmount, shakeAmount, 0f);
-                    cameraTransform.localPosition = originalCamPos + shakeOffset;
-                }
             }
             else
             {
-                // ✅ Warmup complete
-                if (cooldownText != null)
-                {
-                    cooldownText.text = "Slow-mo: Ready";
-                }
-
-                if (cameraTransform != null)
-                {
-                    cameraTransform.localPosition = originalCamPos;
-                }
-
+                isWarmingUp = false;
+                hasWarmedUp = true;
                 perkReady = true;
-            }
 
-            wasReadyLastFrame = true;
+                if (cooldownText != null)
+                    cooldownText.text = "Slow-mo: Ready";
+            }
         }
 
-        // Restore time scale if slow-mo is active
+        // Handle cooldown countdown (after warm-up has completed)
+        if (hasWarmedUp && cooldownTimer > 0f)
+        {
+            cooldownTimer -= Time.unscaledDeltaTime;
+
+            if (cooldownText != null)
+                cooldownText.text = $"Slow-mo: {Mathf.CeilToInt(cooldownTimer)}s";
+
+            if (cooldownTimer <= 0f)
+            {
+                cooldownTimer = 0f;
+                perkReady = true;
+
+                if (cooldownText != null)
+                    cooldownText.text = "Slow-mo: Ready";
+            }
+        }
+
+        // Smooth return to normal time
         if (startTime >= 0f)
         {
-            float elapsedTime = Time.realtimeSinceStartup - startTime;
-
-            if (elapsedTime >= 2f)
+            float elapsed = Time.realtimeSinceStartup - startTime;
+            if (elapsed >= 2f)
             {
-                float targetValue = Mathf.Min(1.0f, Time.timeScale + (1f / slowDownLength) * Time.unscaledDeltaTime);
-                Time.timeScale = targetValue;
+                float t = Mathf.Min(1.0f, Time.timeScale + (1f / slowDownLength) * Time.unscaledDeltaTime);
+                Time.timeScale = t;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;
 
                 if (Time.timeScale >= 0.99f)
@@ -139,27 +111,19 @@ public class TimeManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
-        {
             DoSlowMotion();
-        }
     }
 
     public void DoSlowMotion()
     {
-        if (!perkUnlocked || !perkReady) return;
-
-        if (cooldownTimer > 0f)
+        if (!perkUnlocked || !perkReady || isWarmingUp)
         {
-            Debug.Log("Slow-mo is on cooldown!");
+            Debug.Log("Slow-mo not ready yet!");
             return;
         }
 
-        if (slowMoSound != null)
-        {
-            slowMoSound.Play();
-        }
-
         slowActivated = true;
+        perkReady = false;
         Time.timeScale = slowDownFactor;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
         startTime = Time.realtimeSinceStartup;
@@ -169,5 +133,17 @@ public class TimeManager : MonoBehaviour
         {
             cooldownText.text = $"Slow-mo: {Mathf.CeilToInt(cooldownTimer)}s";
         }
+
+        if (slowMoAudioSource != null && slowMoSound != null)
+        {
+            slowMoAudioSource.PlayOneShot(slowMoSound);
+        }
+    }
+
+    public void StartWarmUp()
+    {
+        isWarmingUp = true;
+        readyTextTimer = readyTextDelay;
+        readyUIHoldTimer = readyUISwitchDelay;
     }
 }

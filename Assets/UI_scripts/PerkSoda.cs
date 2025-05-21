@@ -12,6 +12,13 @@ public class PerkSoda : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip drinkSound;
 
+    [Header("Camera Shake")]
+    public float shakeDuration = 12f;
+    public float shakeIntensity = 0.1f;
+    private bool isShaking = false;
+    private float shakeTimer = 0f;
+    private Vector3 originalCamPos;
+
     private bool perkGiven = false;
 
     void Start()
@@ -20,6 +27,11 @@ public class PerkSoda : MonoBehaviour
         {
             playerCam = Camera.main;
             Debug.Log("PerkSoda: Assigned PlayerCam via Camera.main");
+        }
+
+        if (playerCam != null)
+        {
+            originalCamPos = playerCam.transform.localPosition;
         }
 
         if (perkPromptUI == null)
@@ -38,7 +50,6 @@ public class PerkSoda : MonoBehaviour
             Debug.Log("PerkSoda: Found TimeManager in scene");
         }
 
-        // ✅ Auto-assign the audio source from the Player if not already set
         if (audioSource == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -57,44 +68,65 @@ public class PerkSoda : MonoBehaviour
         }
     }
 
-
     void Update()
     {
-        if (perkGiven || playerCam == null) return;
-
-        Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, lookDistance))
+        if (!perkGiven && playerCam != null)
         {
-            if (hit.collider != null && hit.collider.CompareTag("Soda"))
+            Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, lookDistance))
             {
-                perkPromptUI?.SetActive(true);
-
-                if (Input.GetKeyDown(KeyCode.E))
+                if (hit.collider != null && hit.collider.CompareTag("Soda"))
                 {
-                    Debug.Log("Perk granted from soda!");
-                    perkGiven = true;
-                    timeManager.perkUnlocked = true;
-                    perkPromptUI?.SetActive(false);
+                    perkPromptUI?.SetActive(true);
 
-                    Destroy(hit.collider.gameObject); // 💥 Destroy soda
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        Debug.Log("Perk granted from soda!");
+                        perkGiven = true;
+                        timeManager.perkUnlocked = true;
+                        perkPromptUI?.SetActive(false);
 
-                    // 🔊 Play drink sound from player's AudioSource
-                    if (audioSource != null && drinkSound != null)
-                    {
-                        audioSource.PlayOneShot(drinkSound);
+                        Destroy(hit.collider.gameObject); // 💥 Destroy soda
+
+                        if (audioSource != null && drinkSound != null)
+                        {
+                            audioSource.PlayOneShot(drinkSound);
+                        }
+
+                        // 🚀 Start one-time camera shake
+                        if (playerCam != null)
+                        {
+                            isShaking = true;
+                            shakeTimer = shakeDuration;
+                            originalCamPos = playerCam.transform.localPosition;
+                        }
                     }
-                    else
-                    {
-                        Debug.LogWarning("Drink sound or AudioSource not set or found.");
-                    }
+
+                    return;
                 }
-
-                return;
             }
+
+            perkPromptUI?.SetActive(false);
         }
 
-        perkPromptUI?.SetActive(false);
+        // 🔁 Apply shake if active
+        if (isShaking && playerCam != null)
+        {
+            shakeTimer -= Time.deltaTime;
+            if (shakeTimer > 0f)
+            {
+                float shakeOffsetX = Random.Range(-1f, 1f) * shakeIntensity;
+                float shakeOffsetY = Random.Range(-1f, 1f) * shakeIntensity;
+                Vector3 shakeOffset = new Vector3(shakeOffsetX, shakeOffsetY, 0f);
+                playerCam.transform.localPosition = originalCamPos + shakeOffset;
+            }
+            else
+            {
+                isShaking = false;
+                playerCam.transform.localPosition = originalCamPos;
+            }
+        }
     }
 }
