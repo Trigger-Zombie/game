@@ -4,6 +4,7 @@ public class EnemyMovement : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Transform player;
+    public WaveManager waveManager;
     private NavMeshAgent navMeshAgent;
     private Animator zombAnimator;
     private bool isMoving = false;
@@ -64,7 +65,15 @@ public class EnemyMovement : MonoBehaviour
             // if (coinManager != null)
             // {
             CoinManager.Instance.AddCoin(1);
-            // }
+             // Notify WaveManager
+            if (AmAlive.waveManager != null)
+            {
+                AmAlive.waveManager.EnemyDied();
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ waveManager is null on zombie death!");
+            }
 
             Destroy(gameObject);
         }

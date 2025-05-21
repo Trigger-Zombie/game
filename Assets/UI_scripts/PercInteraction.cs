@@ -6,11 +6,32 @@ public class PerkInteraction : MonoBehaviour
     public GameObject perkPromptUI; // "Press [E] 50 Gold" UI
     public float lookDistance = 5f;
     public int perkCost = 50;
-    public TimeManager timeManager;
+    public SodaCycler sodaCycler; // Auto-assigned
 
+    [Header("Audio")]
+    public AudioSource vendingAudioSource;
+    public AudioClip cycleStartSound;
+
+    void Start()
+    {
+        if (sodaCycler == null)
+        {
+            sodaCycler = GetComponent<SodaCycler>();
+            if (sodaCycler != null)
+                Debug.Log("✅ SodaCycler auto-assigned in Start()");
+            else
+                Debug.LogError("❌ SodaCycler still NULL in Start()! Check object setup.");
+        }
+    }
 
     void Update()
     {
+        if (playerCam == null)
+        {
+            Debug.LogError("❌ PlayerCam not assigned!");
+            return;
+        }
+
         Ray ray = new Ray(playerCam.transform.position, playerCam.transform.forward);
         RaycastHit hit;
 
@@ -18,14 +39,31 @@ public class PerkInteraction : MonoBehaviour
         {
             if (hit.collider.CompareTag("Perk"))
             {
-                perkPromptUI.SetActive(true);
+                perkPromptUI?.SetActive(true);
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     if (CoinManager.Instance.coinCount >= perkCost)
                     {
                         CoinManager.Instance.AddCoin(-perkCost);
-                        timeManager.perkUnlocked = true;
+
+                        // 🔊 Play sound
+                        if (vendingAudioSource != null && cycleStartSound != null)
+                        {
+                            vendingAudioSource.Stop();
+                            vendingAudioSource.PlayOneShot(cycleStartSound);
+                            Debug.Log("▶️ Played vending machine sound.");
+                        }
+
+                        if (sodaCycler != null)
+                        {
+                            sodaCycler.StartSodaCycle();
+                            Debug.Log("🧃 Soda cycle started!");
+                        }
+                        else
+                        {
+                            Debug.LogError("❌ sodaCycler was NULL when trying to start cycle!");
+                        }
                     }
                     else
                     {
@@ -36,6 +74,7 @@ public class PerkInteraction : MonoBehaviour
                 return;
             }
         }
-        perkPromptUI.SetActive(false);
+
+        perkPromptUI?.SetActive(false);
     }
 }

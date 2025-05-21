@@ -21,7 +21,6 @@ public class player_controller : MonoBehaviour
     public int currentHealth;
     public GameObject[] gunSlots = new GameObject[2]; // Slot 0 = Key 1, Slot 1 = Key 2
     private int currentGunIndex = 0;
-
     public Transform weaponMount;
 
     void Start()
@@ -86,7 +85,7 @@ public class player_controller : MonoBehaviour
 
         if (amount > 0)
         {
-            //Debug.Log("Took damage: " + amount);
+            Debug.Log("Took damage: " + amount);
             if (currentHealth <= 0)
             {
                 Debug.Log("Player has died.");
