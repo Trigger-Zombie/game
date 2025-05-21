@@ -21,6 +21,8 @@ public class player_controller : MonoBehaviour
     public int currentHealth;
     public GameObject[] gunSlots = new GameObject[2]; // Slot 0 = Key 1, Slot 1 = Key 2
     private int currentGunIndex = 0;
+    public Transform weaponMount;
+
 
     void Start()
     {
@@ -38,7 +40,7 @@ public class player_controller : MonoBehaviour
             isFirstPerson = !isFirstPerson;
             SetCameraView(isFirstPerson);
         }
-        if(Input.GetKeyDown("q"))
+        if (Input.GetKeyDown("q"))
         {
             timeManager.DoSlowMotion();
         }
@@ -60,11 +62,11 @@ public class player_controller : MonoBehaviour
         float actualSpeed = speed / Time.timeScale;
         rb.linearVelocity = new Vector3(move.x * actualSpeed, rb.linearVelocity.y, move.z * actualSpeed);
         // Optional: rotate the player to match movement direction (if you want to rotate smoothly)
-       /* if (move.magnitude > 0.1f)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-        }*/
+        /* if (move.magnitude > 0.1f)
+         {
+             Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
+             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+         }*/
     }
 
     private void SetCameraView(bool firstPerson)
@@ -74,29 +76,29 @@ public class player_controller : MonoBehaviour
     }
 
     public void TakeDamage(int amount)
-{
-    currentHealth -= amount;
-
-    // Clamp between 0 and maxHealth
-    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-    healthBar.SetHealth(currentHealth);
-
-    if (amount > 0)
     {
-        Debug.Log("Took damage: " + amount);
-        if (currentHealth <= 0)
+        currentHealth -= amount;
+
+        // Clamp between 0 and maxHealth
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        healthBar.SetHealth(currentHealth);
+
+        if (amount > 0)
         {
-            Debug.Log("Player has died.");
-            // Add death logic here
+            Debug.Log("Took damage: " + amount);
+            if (currentHealth <= 0)
+            {
+                Debug.Log("Player has died.");
+                // Add death logic here
+            }
+        }
+        else if (amount < 0)
+        {
+            Debug.Log("Healed: " + Mathf.Abs(amount));
+            // Optional: add healing effects here
         }
     }
-    else if (amount < 0)
-    {
-        Debug.Log("Healed: " + Mathf.Abs(amount));
-        // Optional: add healing effects here
-    }
-}
 
     void Equip(int slotIndex)
     {
@@ -114,6 +116,41 @@ public class player_controller : MonoBehaviour
             gunSlots[slotIndex].SetActive(true);
             currentGunIndex = slotIndex;
         }
+    }
+    
+     public void PickupGun(GameObject newGun){ // use playerControllerRef.PickupGun(gunPrefab); from a source to let the gun pickup
+        // Find the first empty slot, or overwrite the currently equipped one
+        int targetSlot = -1;
+        for (int i = 0; i < gunSlots.Length; i++)
+        {
+            if (gunSlots[i] == null)
+            {
+                targetSlot = i;
+                break;
+            }
+        }
+
+        // If all slots are full, overwrite the currently equipped one
+        if (targetSlot == -1)
+        {
+            Destroy(gunSlots[currentGunIndex]);
+            targetSlot = currentGunIndex;
+        }
+
+        // Instantiate the new gun and parent it to the player (e.g., hand or weapon mount)
+        //GameObject newGunInstance = Instantiate(newGun, transform);
+        //GameObject newGunInstance = Instantiate(newGun, weaponMount.position, weaponMount.rotation, weaponMount);
+        GameObject newGunInstance = Instantiate(newGun, weaponMount);
+        newGunInstance.transform.localPosition = Vector3.zero;
+        newGunInstance.transform.localRotation = Quaternion.identity;
+        if (newGunInstance.CompareTag("Shotgun")){
+
+            newGunInstance.transform.localRotation = Quaternion.Euler(0f, -90f, 0f); // or whatever fixes it
+        }
+        newGunInstance.SetActive(false); // Don't auto-fire unless equipped
+
+        gunSlots[targetSlot] = newGunInstance;
+        Equip(targetSlot); // Optional: auto-equip the new gun
     }
 
 }

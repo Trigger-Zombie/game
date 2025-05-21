@@ -119,7 +119,7 @@ public class EnemyMovement : MonoBehaviour
         attacking = false;
     }
 
-    void OnTriggerStay(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if(other.CompareTag("Player")){
             //Debug.Log("Attempting Hit");

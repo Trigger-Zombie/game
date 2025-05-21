@@ -8852,7 +8852,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 544b62e83d4f9c74784dfb7428fe1da0, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 43670c66de7e70447a78e3cc2afa88df, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1261274705 stripped
 Transform:
@@ -10331,6 +10331,8 @@ MonoBehaviour:
   spawnPoint: {fileID: 1358570145}
   cycleInterval: 0.5
   totalCycleTime: 5
+  finalGunPrefab: {fileID: 0}
+  currentGunInstance: {fileID: 0}
 --- !u!1001 &1516658354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11015,6 +11017,7 @@ MonoBehaviour:
   gunSlots:
   - {fileID: 2104088693}
   - {fileID: 1368031699}
+  weaponMount: {fileID: 2043773749}
 --- !u!54 &1594672426
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11133,6 +11136,7 @@ Transform:
   m_Children:
   - {fileID: 330585546}
   - {fileID: 1618324252}
+  - {fileID: 2043773749}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1594672431
@@ -15243,6 +15247,37 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1057735129}
   m_SourcePrefab: {fileID: 100100000, guid: 251456f4e34784c42a3bd9767fb3556b, type: 3}
+--- !u!1 &2043773748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2043773749}
+  m_Layer: 0
+  m_Name: gunmount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2043773749
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043773748}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.25, y: 0.5, z: 0.408}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1594672430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2055551388 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1760589060701751802, guid: 251456f4e34784c42a3bd9767fb3556b, type: 3}
