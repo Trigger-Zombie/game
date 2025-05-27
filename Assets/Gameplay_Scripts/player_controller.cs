@@ -23,6 +23,7 @@ public class player_controller : MonoBehaviour
     private int currentGunIndex = 0;
     public Transform weaponMount;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

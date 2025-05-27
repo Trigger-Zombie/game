@@ -9124,7 +9124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedVersion: 0
   m_AgentTypeID: 0
-  m_CollectObjects: 2
+  m_CollectObjects: 0
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
@@ -9137,8 +9137,8 @@ MonoBehaviour:
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
   m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.01
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 7a3de5653a1033849ae0a7251f753739, type: 2}
   m_BuildHeightMesh: 0
@@ -26814,19 +26814,19 @@ SceneRoots:
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 922601405}
+  - {fileID: 1247572314}
   - {fileID: 1594672430}
+  - {fileID: 922601405}
   - {fileID: 4962119618330582965}
   - {fileID: 774778113}
-  - {fileID: 1247572314}
+  - {fileID: 1861753255}
+  - {fileID: 1574318657}
   - {fileID: 884450616}
   - {fileID: 1477890367}
   - {fileID: 790962106}
   - {fileID: 6200720780452681058}
   - {fileID: 650355527}
-  - {fileID: 1861753255}
   - {fileID: 403185932}
-  - {fileID: 1574318657}
   - {fileID: 1960590473}
   - {fileID: 91427420}
   - {fileID: 164616269}
