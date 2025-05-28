@@ -165,6 +165,10 @@ MonoBehaviour:
   pelletCount: 10
   spreadAngle: 5
   shootClip: {fileID: 8300000, guid: 0430a4cd34fce76489f658c7bc9414a0, type: 3}
+  reloadClip: {fileID: 8300000, guid: 94a2eb2c0e0c46b4ab3faa090f2c320b, type: 3}
+  totalAmmo: 30
+  clipAmount: 5
+  clipSize: 5
 --- !u!82 &2368248463569782014
 AudioSource:
   m_ObjectHideFlags: 0

@@ -2,41 +2,40 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Xml.Schema;
+
 public class riflescript : MonoBehaviour
 {
     public GameObject bulletPrefab;
     public Transform firePoint;
-    
+
     public GameObject muzzleFlash;
     private TimeManager timeManager;
     public float fireRate = 0.2f;
     private float nextTimeToFire = 0f;
+
     public AudioClip shootClip; // Audio file to play
+    public AudioClip reloadClip; // Reload sound to play
+
     private AudioSource audioSource;
 
     public float totalAmmo = 150f;
-
     public float clipAmount = 25f;
-
     public float clipSize = 25f;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
-         audioSource = GetComponent<AudioSource>();
+        timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Mouse.current == null) return;
 
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
-
-            if (clipAmount > 0){
-
+            if (clipAmount > 0)
+            {
                 nextTimeToFire = Time.unscaledTime + fireRate;
                 clipAmount -= 1;
                 Shoot();
@@ -46,7 +45,7 @@ public class riflescript : MonoBehaviour
                 Debug.Log("Out of ammo in clip. Press R to reload.");
             }
         }
-        
+
         if (Keyboard.current.rKey.wasPressedThisFrame)
         {
             Reload();
@@ -55,43 +54,45 @@ public class riflescript : MonoBehaviour
 
     void Shoot()
     {
-            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            if (shootClip != null && audioSource != null)
-            {
-                audioSource.PlayOneShot(shootClip);
-            }
+        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
-            StartCoroutine(MuzzleFlashRoutine());
+        if (shootClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootClip);
+        }
 
-        //Destroy(flash, 0.1f);
+        StartCoroutine(MuzzleFlashRoutine());
     }
 
     void Reload()
-{
-    // If clip is already full or no spare ammo, do nothing
-    if (clipAmount >= clipSize || totalAmmo <= 0) return;
-
-    float neededAmmo = clipSize - clipAmount;
-
-    if (totalAmmo >= neededAmmo)
     {
-        clipAmount += neededAmmo;
-        totalAmmo -= neededAmmo;
-    }
-    else
-    {
-        // Not enough to fully reload
-        clipAmount += totalAmmo;
-        totalAmmo = 0;
-    }
+        if (clipAmount >= clipSize || totalAmmo <= 0) return;
 
-    Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
-}
+        float neededAmmo = clipSize - clipAmount;
+
+        if (totalAmmo >= neededAmmo)
+        {
+            clipAmount += neededAmmo;
+            totalAmmo -= neededAmmo;
+        }
+        else
+        {
+            clipAmount += totalAmmo;
+            totalAmmo = 0;
+        }
+
+        if (reloadClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(reloadClip);
+        }
+
+        Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
+    }
 
     private IEnumerator MuzzleFlashRoutine()
     {
         muzzleFlash.SetActive(true);
-        yield return new WaitForSeconds(0.05f); // Flash duration (super quick)
+        yield return new WaitForSeconds(0.05f);
         muzzleFlash.SetActive(false);
     }
 }
