@@ -17,7 +17,7 @@ public class shotgunScript : MonoBehaviour
     public AudioClip shootClip;   // Shooting sound
     public AudioClip reloadClip;  // Reloading sound
     private AudioSource audioSource;
-
+    public AmmoUI ammoUI;
     public float totalAmmo = 30f;
     public float clipAmount = 5f;
     public float clipSize = 5f;
@@ -31,6 +31,10 @@ public class shotgunScript : MonoBehaviour
     {
         if (Mouse.current == null) return;
 
+        // Don't fire if cursor is unlocked or game is paused
+        if (Cursor.lockState != CursorLockMode.Locked || Time.timeScale == 0f)
+            return;
+
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
             if (clipAmount > 0)
@@ -38,6 +42,7 @@ public class shotgunScript : MonoBehaviour
                 nextTimeToFire = Time.unscaledTime + fireRate;
                 clipAmount -= 1;
                 Shoot();
+                ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
             }
             else
             {
@@ -50,6 +55,7 @@ public class shotgunScript : MonoBehaviour
             Reload();
         }
     }
+
 
     void Shoot()
     {

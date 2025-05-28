@@ -17,7 +17,7 @@ public class riflescript : MonoBehaviour
     public AudioClip reloadClip; // Reload sound to play
 
     private AudioSource audioSource;
-
+    public AmmoUI ammoUI;
     public float totalAmmo = 150f;
     public float clipAmount = 25f;
     public float clipSize = 25f;
@@ -32,6 +32,10 @@ public class riflescript : MonoBehaviour
     {
         if (Mouse.current == null) return;
 
+        // Don't fire if cursor is unlocked or game is paused
+        if (Cursor.lockState != CursorLockMode.Locked || Time.timeScale == 0f)
+            return;
+
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
             if (clipAmount > 0)
@@ -39,6 +43,7 @@ public class riflescript : MonoBehaviour
                 nextTimeToFire = Time.unscaledTime + fireRate;
                 clipAmount -= 1;
                 Shoot();
+                ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
             }
             else
             {
@@ -51,6 +56,7 @@ public class riflescript : MonoBehaviour
             Reload();
         }
     }
+
 
     void Shoot()
     {
