@@ -13,7 +13,7 @@ public class riflescript : MonoBehaviour
     private float nextTimeToFire = 0f;
     public AudioClip shootClip; // Audio file to play
     private AudioSource audioSource;
-
+    public AmmoUI ammoUI;
     public float totalAmmo = 150f;
 
     public float clipAmount = 25f;
@@ -32,26 +32,31 @@ public class riflescript : MonoBehaviour
     {
         if (Mouse.current == null) return;
 
+        // Don't fire if cursor is unlocked or game is paused
+        if (Cursor.lockState != CursorLockMode.Locked || Time.timeScale == 0f)
+            return;
+
         if (Mouse.current.leftButton.isPressed && Time.unscaledTime >= nextTimeToFire)
         {
-
-            if (clipAmount > 0){
-
+            if (clipAmount > 0)
+            {
                 nextTimeToFire = Time.unscaledTime + fireRate;
                 clipAmount -= 1;
                 Shoot();
+                ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
             }
             else
             {
                 Debug.Log("Out of ammo in clip. Press R to reload.");
             }
         }
-        
+
         if (Keyboard.current.rKey.wasPressedThisFrame)
         {
             Reload();
         }
     }
+
 
     void Shoot()
     {

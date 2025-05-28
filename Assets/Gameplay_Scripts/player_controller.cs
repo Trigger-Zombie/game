@@ -22,6 +22,8 @@ public class player_controller : MonoBehaviour
     public GameObject[] gunSlots = new GameObject[2]; // Slot 0 = Key 1, Slot 1 = Key 2
     private int currentGunIndex = 0;
     public Transform weaponMount;
+    public GameObject deathScreenPanel;
+    public MouseLook mouseLookScript;
 
 
     void Start()
@@ -31,6 +33,8 @@ public class player_controller : MonoBehaviour
         SetCameraView(true); // default to first person
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -75,6 +79,26 @@ public class player_controller : MonoBehaviour
         firstPersonCamera.enabled = firstPerson;
     }
 
+    void Die()
+    {
+        Debug.Log("Player has died.");
+
+        // Show the death screen
+        if (deathScreenPanel != null)
+            deathScreenPanel.SetActive(true);
+
+        // Stop the game
+        Time.timeScale = 0f;
+
+        // Unlock and show the cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        // Disable player controls
+        this.enabled = false; // Disables player_controller
+        if (mouseLookScript != null)
+            mouseLookScript.enabled = false; // Disables mouse look
+    }
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
@@ -91,6 +115,7 @@ public class player_controller : MonoBehaviour
             {
                 Debug.Log("Player has died.");
                 // Add death logic here
+                Die();
             }
         }
         else if (amount < 0)
