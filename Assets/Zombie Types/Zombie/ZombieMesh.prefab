@@ -132,8 +132,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  waveManager: {fileID: 0}
   zombieSpeed: 5
   damageAmount: 10
+  deathSounds:
+  - {fileID: 8300000, guid: 9e1f6e20a82a3c641bb651cc94b018d8, type: 3}
+  - {fileID: 8300000, guid: 9e992e3a119caab46b4e8d776ef8924e, type: 3}
 --- !u!135 &3719331083780028492
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -196,4 +200,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombieHealth: 100
+  waveManager: {fileID: 0}
   alive: 1
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
