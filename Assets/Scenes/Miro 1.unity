@@ -11775,6 +11775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chestAnimator: {fileID: 6200720780462209666}
   cubeAnimator: {fileID: 1507114270}
+  idleClip: {fileID: 7400000, guid: 4b79401f9dd792243ac1fc7942d1d6e9, type: 2}
   playerCam: {fileID: 1618324249}
   chestPromptUI: {fileID: 884450612}
   lookDistance: 5

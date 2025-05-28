@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class ChestInteraction : MonoBehaviour
 {
@@ -10,9 +11,19 @@ public class ChestInteraction : MonoBehaviour
     public GameObject chestPromptUI;
     public float lookDistance = 5f;
     public GunCycler gunCycler;
+
     private bool chestReset = false;
     private bool chestOpened = false;
     private bool gunAvailable = false;
+    private TextMeshProUGUI promptText;
+
+    void Start()
+    {
+        if (chestPromptUI != null)
+        {
+            promptText = chestPromptUI.GetComponentInChildren<TextMeshProUGUI>();
+        }
+    }
 
     void Update()
     {
@@ -24,6 +35,12 @@ public class ChestInteraction : MonoBehaviour
             if (hit.collider.CompareTag("Chest"))
             {
                 chestPromptUI.SetActive(true);
+
+                if (!chestOpened)
+                {
+                    if (promptText != null)
+                        promptText.text = "Weapon\nPress [E]\n100 Gold";
+                }
 
                 if (Input.GetKeyDown(KeyCode.E) && !chestOpened)
                 {
@@ -73,16 +90,21 @@ public class ChestInteraction : MonoBehaviour
         }
 
         chestPromptUI?.SetActive(false);
+        if (promptText != null)
+            promptText.text = "";
     }
 
     void MakeGunAvailable()
     {
         gunAvailable = true;
+
+        if (promptText != null)
+            promptText.text = "Equip Weapon\nPress [F]";
     }
 
     void ResetChest()
     {
-        if (chestReset) return; 
+        if (chestReset) return;
         chestReset = true;
         Debug.Log("🔁 Resetting chest now.");
 
@@ -96,11 +118,13 @@ public class ChestInteraction : MonoBehaviour
         chestOpened = false;
         gunAvailable = false;
 
+        if (promptText != null)
+            promptText.text = "";
+
         if (gunCycler != null)
         {
             Destroy(gunCycler.currentGunInstance);
             gunCycler.finalGunPrefab = null;
         }
     }
-
 }
