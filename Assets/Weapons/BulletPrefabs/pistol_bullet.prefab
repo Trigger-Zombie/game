@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &87526566929456331
+--- !u!1 &3863648171936915127
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,26 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1784407457700893678}
-  - component: {fileID: 6698606514521632627}
-  - component: {fileID: 6882823680698500374}
-  - component: {fileID: 6227447399708196259}
-  - component: {fileID: 2299794880670851932}
-  - component: {fileID: -2721919180703338470}
+  - component: {fileID: 1322211361890229853}
+  - component: {fileID: 2978865097601985341}
+  - component: {fileID: 5900087883918864380}
+  - component: {fileID: 3578077840816934428}
+  - component: {fileID: 7185607210217085483}
+  - component: {fileID: -3636071447327252414}
   m_Layer: 0
-  m_Name: shotgun_bullet
+  m_Name: pistol_bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1784407457700893678
+--- !u!4 &1322211361890229853
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -36,21 +36,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6698606514521632627
+--- !u!33 &2978865097601985341
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6882823680698500374
+--- !u!23 &5900087883918864380
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 259515fb9b70c5a47ac037e05b98f80b, type: 2}
+  - {fileID: 2100000, guid: 0d25a51dbce59cd46a1c7a05ebf6c36a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6227447399708196259
+--- !u!136 &3578077840816934428
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -112,13 +112,13 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2299794880670851932
+--- !u!54 &7185607210217085483
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -139,18 +139,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-2721919180703338470
+--- !u!114 &-3636071447327252414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 87526566929456331}
+  m_GameObject: {fileID: 3863648171936915127}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e6a3a9a2dedcd84fa2677389fc1dd5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 56696d4f3ad8db74ba0df7820749e6c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 70
-  lifetime: 2.5
+  speed: 55
+  lifetime: 5
   damage: 10
