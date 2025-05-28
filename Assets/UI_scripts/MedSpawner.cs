@@ -5,7 +5,7 @@ public class SpinMeds : MonoBehaviour
     public AudioSource healSound;
     public float rotationSpeed = 50f;
     public int healAmount = 100;
-    public float respawnTime = 10f;
+    public float respawnTime = 25f;
     public GameObject visual;
     public GameObject pharmacyLogo;
 

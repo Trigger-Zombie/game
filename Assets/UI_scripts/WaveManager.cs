@@ -22,6 +22,11 @@ public class WaveManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip waveStartSound;
 
+    [Header("Zombie Grunt Audio")]
+    public AudioClip[] zombieGruntSounds;
+    public float gruntInterval = 5f;
+    private float gruntTimer = 0f;
+
     private int enemiesAlive = 0;
     private bool waveActive = false;
     private bool waitingForNextWave = false;
@@ -31,6 +36,26 @@ public class WaveManager : MonoBehaviour
     {
         UpdateWaveText(0);
         StartNewWave();
+    }
+
+    void Update()
+    {
+        // Handle grunt sounds if enemies are alive
+        if (enemiesAlive > 0 && audioSource != null && zombieGruntSounds.Length > 0)
+        {
+            gruntTimer += Time.deltaTime;
+            if (gruntTimer >= gruntInterval)
+            {
+                gruntTimer = 0f;
+                int index = Random.Range(0, zombieGruntSounds.Length);
+                audioSource.PlayOneShot(zombieGruntSounds[index]);
+                Debug.Log("Grunt sound played: " + zombieGruntSounds[index].name);
+            }
+        }
+        else
+        {
+            gruntTimer = 0f;
+        }
     }
 
     void UpdateWaveText(int waveNumber, float countdown = -1f)
@@ -147,10 +172,10 @@ public class WaveManager : MonoBehaviour
         if (waveNumber == 1)
             return 5;
         else if (waveNumber == 2)
-            return 7;
+            return 6;
         else if (waveNumber == 3)
-            return 8;
+            return 7;
         else
-            return 9 + ((waveNumber - 3) * 2);
+            return 6 + ((waveNumber - 3) * 2);
     }
 }

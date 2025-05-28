@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
+
 public class EnemyMovement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Transform player;
     public WaveManager waveManager;
     private NavMeshAgent navMeshAgent;
@@ -11,116 +12,135 @@ public class EnemyMovement : MonoBehaviour
     private bool attacking;
     public int zombieSpeed = 4;
     private zombieHitbox AmAlive;
-
-    private player_controller playerController; 
+    private player_controller playerController;
     public int damageAmount = 10;
-    
-    // public CoinManager coinManager;
+
+    public AudioClip[] deathSounds;
+    private AudioSource audioSource;
+    private Renderer zombieRenderer;
+    private bool isDying = false;
+
     void Start()
     {
         attacking = false;
         navMeshAgent = GetComponent<NavMeshAgent>();
         zombAnimator = GetComponent<Animator>();
         navMeshAgent.updateRotation = true;
-        navMeshAgent.angularSpeed = 180f; // Increase rotation speed
-        
+        navMeshAgent.angularSpeed = 180f;
+
         if (player == null)
         {
-            player = GameObject.FindWithTag("Player").transform; // Assuming the player has the tag "Player"
+            player = GameObject.FindWithTag("Player").transform;
         }
-        
+
         if (player != null)
         {
             playerController = player.GetComponent<player_controller>();
-            if (playerController == null)
-            {
-                Debug.LogError("player_controller script not found on player object.");
-            }
         }
-        
-        Transform zombieHealthbox = transform.Find("ZombieMesh");
 
+        Transform zombieHealthbox = transform.Find("ZombieMesh");
         if (zombieHealthbox != null)
         {
-            // Get the amIAliveScript component attached to the amIAlive object
             AmAlive = zombieHealthbox.GetComponent<zombieHitbox>();
+            zombieRenderer = zombieHealthbox.GetComponent<Renderer>();
+        }
 
-            if (AmAlive == null)
-            {
-                Debug.LogError("ChildScript not found on the child object.");
-            }
-        }
-        else
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
         {
-            Debug.LogError("Child object not found.");
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
+        audioSource.playOnAwake = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!AmAlive.alive)
+        if (AmAlive != null && !AmAlive.alive && !isDying)
         {
-            // CoinManager coinManager = FindFirstObjectByType<CoinManager>();
-            // if (coinManager != null)
-            // {
-            CoinManager.Instance.AddCoin(1);
-             // Notify WaveManager
-            if (AmAlive.waveManager != null)
-            {
-                AmAlive.waveManager.EnemyDied();
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ waveManager is null on zombie death!");
-            }
-
-            Destroy(gameObject);
+            Debug.Log("Starting HandleDeath()");
+            StartCoroutine(HandleDeath());
+            return;
         }
-        // if(!AmAlive.alive){
-        //     Destroy(gameObject);
-        // }
 
-        if(player != null)
+        if (player != null && AmAlive != null && AmAlive.alive)
         {
             navMeshAgent.SetDestination(player.position);
 
-                if(attacking)
+            if (attacking)
             {
-                // Calculate direction to player (ignoring Y axis)
                 Vector3 lookDirection = player.position - transform.position;
                 lookDirection.y = 0;
-                
-                if(lookDirection != Vector3.zero)
+
+                if (lookDirection != Vector3.zero)
                 {
-                    // Create rotation to face player
                     Quaternion rotation = Quaternion.LookRotation(lookDirection);
-                    // Apply rotation
                     transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * 5f);
                 }
             }
-            
-            float speed = navMeshAgent.velocity.magnitude; //gets the current speed of the zombie
-            if(!attacking && !isMoving){
+
+            float speed = navMeshAgent.velocity.magnitude;
+            if (!attacking && !isMoving)
+            {
                 navMeshAgent.speed = zombieSpeed;
                 zombAnimator.SetTrigger("TrMove");
                 isMoving = true;
             }
-            else if(speed > 0.1f && !isMoving){
+            else if (speed > 0.1f && !isMoving)
+            {
                 navMeshAgent.speed = zombieSpeed;
                 zombAnimator.SetTrigger("TrMove");
                 isMoving = true;
             }
         }
+    }
 
+    private IEnumerator HandleDeath()
+    {
+        isDying = true;
 
+        // Stop movement and attacks
+        if (navMeshAgent != null) navMeshAgent.enabled = false;
+        attacking = false;
+        isMoving = false;
+
+        // Disable collider(s)
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
+        }
+
+        // Hide visuals
+        if (zombieRenderer != null)
+        {
+            zombieRenderer.enabled = false;
+        }
+
+        // Award coin and notify wave manager
+        CoinManager.Instance?.AddCoin(1);
+        if (waveManager != null)
+        {
+            waveManager.EnemyDied();
+        }
+
+        // Play death sound
+        if (deathSounds.Length > 0)
+        {
+            int index = Random.Range(0, deathSounds.Length);
+            AudioClip clip = deathSounds[index];
+            audioSource.PlayOneShot(clip);
+            Debug.Log("Playing death sound: " + clip.name);
+            yield return new WaitForSeconds(clip.length);
+        }
+
+        Destroy(gameObject);
     }
 
     public void OnAnimationComplete()
     {
         if (playerController != null)
         {
-            playerController.TakeDamage(damageAmount);  // Apply damage to player
+            playerController.TakeDamage(damageAmount);
         }
 
         navMeshAgent.speed = zombieSpeed;
@@ -130,20 +150,19 @@ public class EnemyMovement : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player")){
-            //Debug.Log("Attempting Hit");
-            if(!attacking)
-            {
-                navMeshAgent.speed = 0;
-                zombAnimator.SetTrigger("TrAttack");
-                attacking = true;
-            }
-        }  
+        if (isDying || !AmAlive.alive) return;  //  Block attacks while dead or dying
+
+        if (other.CompareTag("Player") && !attacking)
+        {
+            navMeshAgent.speed = 0;
+            zombAnimator.SetTrigger("TrAttack");
+            attacking = true;
+        }
     }
+
 
     private void OnTriggerExit(Collider other)
     {
         attacking = false;
     }
-
 }
