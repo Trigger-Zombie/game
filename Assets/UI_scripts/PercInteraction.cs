@@ -5,7 +5,7 @@ public class PerkInteraction : MonoBehaviour
     public Camera playerCam;
     public GameObject perkPromptUI; // "Press [E] 50 Gold" UI
     public float lookDistance = 5f;
-    public int perkCost = 100;
+    public int perkCost = 50;
     public SodaCycler sodaCycler; // Auto-assigned
 
     [Header("Audio")]

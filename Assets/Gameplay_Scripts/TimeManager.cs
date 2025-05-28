@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour
     private float startTime = -1f;
     public bool slowActivated = false;
 
-    public float cooldownDuration = 10f;
+    public float cooldownDuration = 15f;
     private float cooldownTimer = 0f;
 
     public bool perkUnlocked = false;

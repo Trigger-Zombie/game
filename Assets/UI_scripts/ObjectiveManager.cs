@@ -7,7 +7,7 @@ public class ObjectiveManager : MonoBehaviour
     public GameObject beamPrefab;
     public List<Transform> beamSpawnPoints;  // 🔁 New list of spawn points
     public float spawnDelay = 5f;
-    public float objectiveTime = 22f;
+    public float objectiveTime = 25f;
 
     public GameObject objectiveUI;
     public TextMeshProUGUI objectiveText;

@@ -13,7 +13,7 @@ public class PerkSoda : MonoBehaviour
     public AudioClip drinkSound;
 
     [Header("Camera Shake")]
-    public float shakeDuration = 12f;
+    public float shakeDuration = 9f;
     public float shakeIntensity = 0.1f;
     private bool isShaking = false;
     private float shakeTimer = 0f;
