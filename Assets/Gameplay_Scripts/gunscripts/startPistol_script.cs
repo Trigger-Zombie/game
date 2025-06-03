@@ -53,8 +53,10 @@ public class startPistol_script : MonoBehaviour
 
     void Shoot()
     {
-        Quaternion bulletRotation = Quaternion.LookRotation(firePoint.forward);
-        Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        //Quaternion bulletRotation = Quaternion.LookRotation(firePoint.forward);
+        //Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        
+        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
         if (shootClip != null && audioSource != null)
         {
