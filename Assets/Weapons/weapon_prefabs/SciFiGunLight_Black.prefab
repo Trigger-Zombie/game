@@ -524,6 +524,10 @@ MonoBehaviour:
   muzzleFlash: {fileID: 1806840054560406578}
   fireRate: 0.2
   shootClip: {fileID: 8300000, guid: 491cb429a8d10ad4b9c1c6e22c068a7e, type: 3}
+  reloadClip: {fileID: 8300000, guid: 94a2eb2c0e0c46b4ab3faa090f2c320b, type: 3}
+  totalAmmo: 150
+  clipAmount: 25
+  clipSize: 25
 --- !u!82 &9031739291282547389
 AudioSource:
   m_ObjectHideFlags: 0
