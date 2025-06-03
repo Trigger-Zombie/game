@@ -65,7 +65,7 @@ public class EnemyMovement : MonoBehaviour
             // if (coinManager != null)
             // {
             CoinManager.Instance.AddCoin(1);
-             // Notify WaveManager
+            // Notify WaveManager
             if (AmAlive.waveManager != null)
             {
                 AmAlive.waveManager.EnemyDied();
@@ -76,6 +76,7 @@ public class EnemyMovement : MonoBehaviour
             }
 
             Destroy(gameObject);
+            return;
         }
         // if(!AmAlive.alive){
         //     Destroy(gameObject);

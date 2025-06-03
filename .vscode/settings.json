@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "game.sln"
+    "dotnet.defaultSolution": "game.sln",
+    "liveServer.settings.port": 5501
 }

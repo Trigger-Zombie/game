@@ -13,6 +13,7 @@ TagManager:
   - SciFI Gun
   - Rifle
   - Shotgun
+  - Soda
   layers:
   - Default
   - TransparentFX
@@ -22,9 +23,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Ghost
+  - EnemyProjectile
+  - Ghost Platform
   - 
   - 
   - 
