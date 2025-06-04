@@ -20,6 +20,7 @@ public class EnemyMovement : MonoBehaviour
     private Renderer zombieRenderer;
     private bool isDying = false;
 
+    private bool inRange = false;   
     void Start()
     {
         attacking = false;
@@ -138,7 +139,7 @@ public class EnemyMovement : MonoBehaviour
 
     public void OnAnimationComplete()
     {
-        if (playerController != null)
+        if (playerController != null && inRange)
         {
             playerController.TakeDamage(damageAmount);
         }
@@ -157,6 +158,7 @@ public class EnemyMovement : MonoBehaviour
             navMeshAgent.speed = 0;
             zombAnimator.SetTrigger("TrAttack");
             attacking = true;
+            inRange = true;
         }
     }
 
@@ -164,5 +166,6 @@ public class EnemyMovement : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         attacking = false;
+        inRange = false;
     }
 }
