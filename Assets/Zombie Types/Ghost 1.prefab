@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchForce: 15
-  timeBetweenShots: 3
+  timeBetweenShots: 2
   player: {fileID: 0}
   FireBallPrefab: {fileID: 158476033408281721, guid: a621edb9444ea9e4e8a6cbb0e2cfd940, type: 3}
   FirePoint: {fileID: 6548162066683696538}

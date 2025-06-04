@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZombieMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: aaeb32cf0a92ffa40a0abed3c82f7982, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: aaeb32cf0a92ffa40a0abed3c82f7982, type: 3}
       propertyPath: m_Controller
       value: 

@@ -641,7 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 070b21c5e2b798d468a18b48a82ec259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TankHealth: 150
+  TankHealth: 200
   waveManager: {fileID: 0}
   alive: 1
 --- !u!114 &3363008796824327500

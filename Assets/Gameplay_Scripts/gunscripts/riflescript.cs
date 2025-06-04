@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Xml.Schema;
+using UnityEngine.UI;
 
 public class riflescript : MonoBehaviour
 {
@@ -26,6 +27,22 @@ public class riflescript : MonoBehaviour
     {
         timeManager = GameObject.Find("TimeManager").GetComponent<TimeManager>();
         audioSource = GetComponent<AudioSource>();
+        if (ammoUI == null)
+        {
+            GameObject go = GameObject.Find("AmmoText");
+            if (go != null)
+            {
+                ammoUI = go.GetComponent<AmmoUI>();
+                if (ammoUI == null)
+                {
+                    Debug.LogError("Found GameObject 'AmmoText' but no AmmoUI component on it!");
+                }
+            }
+            else
+            {
+                Debug.LogError("Could not find a GameObject named 'AmmoText' in the scene.");
+            }
+        }
     }
 
     void Update()
