@@ -48,6 +48,7 @@ public class riflescript : MonoBehaviour
             else
             {
                 Debug.Log("Out of ammo in clip. Press R to reload.");
+                FindObjectOfType<TutorialManager>().OnPlayerOutOfAmmo();
             }
         }
 
@@ -57,6 +58,10 @@ public class riflescript : MonoBehaviour
         }
     }
 
+    public (int current, int total) GetAmmo()
+    {
+        return ((int)clipAmount, (int)totalAmmo);
+    }
 
     void Shoot()
     {
@@ -90,9 +95,22 @@ public class riflescript : MonoBehaviour
         if (reloadClip != null && audioSource != null)
         {
             audioSource.PlayOneShot(reloadClip);
+            StartCoroutine(UpdateAmmoUIAfterDelay(reloadClip.length));
+        }
+        else if (ammoUI != null)
+        {
+            ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
         }
 
         Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
+        TutorialManager.Instance?.OnPlayerOutOfAmmo();
+    }
+
+    private IEnumerator UpdateAmmoUIAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (ammoUI != null)
+            ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
     }
 
     private IEnumerator MuzzleFlashRoutine()

@@ -24,6 +24,8 @@ public class player_controller : MonoBehaviour
     public Transform weaponMount;
     public GameObject deathScreenPanel;
     public MouseLook mouseLookScript;
+    public CrosshairManager crosshairManager;
+
 
     public Transform swordMount;
 
@@ -83,6 +85,12 @@ public class player_controller : MonoBehaviour
              Quaternion toRotation = Quaternion.LookRotation(move, Vector3.up);
              transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
          }*/
+         
+        if (movementX != 0 || movementY != 0)
+        {
+            TutorialManager.Instance?.OnPlayerMoved();
+        }
+
     }
 
     private void SetCameraView(bool firstPerson)
@@ -152,6 +160,30 @@ public class player_controller : MonoBehaviour
         {
             gunSlots[slotIndex].SetActive(true);
             currentGunIndex = slotIndex;
+
+            string weaponType = gunSlots[slotIndex].tag;
+            crosshairManager.ShowCrosshair(weaponType);
+
+            // Try updating the AmmoUI immediately
+            AmmoUI ammoUI = FindObjectOfType<AmmoUI>();
+            var gun = gunSlots[slotIndex];
+
+            // Try getting the ammo info
+            if (gun.TryGetComponent<riflescript>(out var rifle))
+            {
+                var (cur, total) = rifle.GetAmmo();
+                ammoUI.UpdateAmmo(cur, total);
+            }
+            else if (gun.TryGetComponent<shotgunScript>(out var shotgun))
+            {
+                var (cur, total) = shotgun.GetAmmo();
+                ammoUI.UpdateAmmo(cur, total);
+            }
+            else if (gun.TryGetComponent<startPistol_script>(out var pistol))
+            {
+                var (cur, total) = pistol.GetAmmo();
+                ammoUI.UpdateAmmo(cur, total);
+            }
         }
     }
 

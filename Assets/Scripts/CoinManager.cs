@@ -35,7 +35,7 @@ public class CoinManager : MonoBehaviour
     {
         if (coinText != null)
         {
-            coinText.text = "Gold: " + coinCount.ToString();
+            coinText.text = ": " + coinCount.ToString();
             coinText.ForceMeshUpdate();  // <-- forces visual refresh
             Debug.Log("UI Updated: Gold: " + coinCount);
         }
