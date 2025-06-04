@@ -121,10 +121,16 @@ public class WaveManager : MonoBehaviour
                         zombieScript.waveManager = this;
                     }
 
-                    zombieHitbox hitbox = enemy.GetComponentInChildren<zombieHitbox>();
-                    if (hitbox != null)
+                    zombieHitbox zHit = enemy.GetComponentInChildren<zombieHitbox>();
+                    if (zHit != null)
                     {
-                        hitbox.waveManager = this;
+                        zHit.waveManager = this;
+                    }
+
+                    ghostHitBox gHit = enemy.GetComponentInChildren<ghostHitBox>();
+                    if (gHit != null)
+                    {
+                        gHit.waveManager = this;
                     }
 
                     enemiesAlive++;

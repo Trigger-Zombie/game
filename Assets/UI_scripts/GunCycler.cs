@@ -27,52 +27,7 @@ public class GunCycler : MonoBehaviour
         StartCoroutine(CycleGuns());
     }
 
-    /*    IEnumerator CycleGuns()
-        {
-            float timer = 0f;
-            int index = 0;
-
-            while (timer < totalCycleTime)
-            {
-                if (currentGunInstance != null)
-                    Destroy(currentGunInstance);
-                int tempIndex = index % gunPrefabs.Count;
-                Debug.Log("tempIndex = " + tempIndex + ", prefab = " + gunPrefabs[tempIndex].name);
-                currentGunInstance = Instantiate(
-                    gunPrefabs[tempIndex],
-                    spawnPoint.position,
-                    spawnPoint.rotation,
-                    spawnPoint
-                );
-                if (gunPrefabs[tempIndex].name.Contains("ShotGun"))
-                {
-                    currentGunInstance.transform.Rotate(0f, -90f, 0f); // adjust as needed
-                }
-                currentGunInstance.transform.localScale = Vector3.one * 3.5f;
-                Debug.Log("Spawned gun: " + gunPrefabs[tempIndex].name);
-                index++;
-                timer += cycleInterval;
-
-                yield return new WaitForSeconds(cycleInterval);
-            }
-            if (currentGunInstance != null)
-                Destroy(currentGunInstance);
-
-            int finalIndex = Random.Range(0, gunPrefabs.Count);
-            currentGunInstance = Instantiate(
-                gunPrefabs[finalIndex],
-                spawnPoint.position,
-                spawnPoint.rotation,
-                spawnPoint
-            );
-            if (gunPrefabs[finalIndex].name.Contains("ShotGun"))
-            {
-                currentGunInstance.transform.Rotate(0f, -90f, 0f); // adjust as needed
-            }
-            currentGunInstance.transform.localScale = Vector3.one * 3.5f;
-            Debug.Log("Final gun selected: " + currentGunInstance.name);
-            // You can do more here if you want to give the gun to the player, etc.
-        }*/
+    
     IEnumerator CycleGuns()
     {
         float timer = 0f;

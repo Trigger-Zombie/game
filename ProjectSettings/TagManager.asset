@@ -14,6 +14,7 @@ TagManager:
   - Rifle
   - Shotgun
   - Soda
+  - sword
   layers:
   - Default
   - TransparentFX

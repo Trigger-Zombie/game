@@ -72,7 +72,7 @@ public class GhostAi : MonoBehaviour
             {
                 Debug.LogWarning("⚠️ waveManager is null on zombie death!");
             }
-
+            
             Destroy(gameObject);
             return;
         }

@@ -46,6 +46,8 @@ GameObject:
   - component: {fileID: 920734014440815551}
   - component: {fileID: 6352486056042701593}
   - component: {fileID: 2368248463569782014}
+  - component: {fileID: -6164916031091207842}
+  - component: {fileID: -154166730171830614}
   m_Layer: 0
   m_Name: ShotGun
   m_TagString: Shotgun
@@ -166,6 +168,7 @@ MonoBehaviour:
   spreadAngle: 5
   shootClip: {fileID: 8300000, guid: 0430a4cd34fce76489f658c7bc9414a0, type: 3}
   reloadClip: {fileID: 8300000, guid: 94a2eb2c0e0c46b4ab3faa090f2c320b, type: 3}
+  ammoUI: {fileID: 0}
   totalAmmo: 30
   clipAmount: 5
   clipSize: 5
@@ -266,6 +269,50 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &-6164916031091207842
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3386410420330673314}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1, z: 1}
+  m_Center: {x: 0.15778355, y: -0.04859481, z: -0.000071740724}
+--- !u!136 &-154166730171830614
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3386410420330673314}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.65
+  m_Height: 0.28711843
+  m_Direction: 1
+  m_Center: {x: 0.15778355, y: -0.04859481, z: -0.000071740724}
 --- !u!1 &7010743257627003731
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,9 +383,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5567486498972719395}
     m_Modifications:
+    - target: {fileID: 100000, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 100008, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
       propertyPath: m_Name
       value: Toon Muzzleflash 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100008, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
       propertyPath: m_IsActive

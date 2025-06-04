@@ -25,6 +25,9 @@ public class player_controller : MonoBehaviour
     public GameObject deathScreenPanel;
     public MouseLook mouseLookScript;
 
+    public Transform swordMount;
+    
+
 
     void Start()
     {
@@ -142,8 +145,12 @@ public class player_controller : MonoBehaviour
             currentGunIndex = slotIndex;
         }
     }
-    
-    public void PickupGun(GameObject newGun){ // use playerControllerRef.PickupGun(gunPrefab); from a source to let the gun pickup
+
+    public void PickupGun(GameObject newGun)
+    { // use playerControllerRef.PickupGun(gunPrefab); from a source to let the gun pickup
+
+        bool isMelee = newGun.CompareTag("sword");
+
         // Find the first empty slot, or overwrite the currently equipped one
         int targetSlot = -1;
         for (int i = 0; i < gunSlots.Length; i++)
@@ -165,17 +172,66 @@ public class player_controller : MonoBehaviour
         // Instantiate the new gun and parent it to the player (e.g., hand or weapon mount)
         //GameObject newGunInstance = Instantiate(newGun, transform);
         //GameObject newGunInstance = Instantiate(newGun, weaponMount.position, weaponMount.rotation, weaponMount);
-        GameObject newGunInstance = Instantiate(newGun, weaponMount);
-        newGunInstance.transform.localPosition = Vector3.zero;
-        newGunInstance.transform.localRotation = Quaternion.identity;
-        if (newGunInstance.CompareTag("Shotgun")){
 
-            newGunInstance.transform.localRotation = Quaternion.Euler(0f, -90f, 0f); // or whatever fixes it
+        Transform mount = isMelee ? swordMount : weaponMount;
+
+        // Instantiate and parent weapon
+        //GameObject newGunInstance = Instantiate(newGun, mount);
+        //Debug.Log("Spawned melee weapon: " + newGunInstance.name);
+        //GameObject newGunInstance = Instantiate(newGun, weaponMount);
+        if (isMelee)
+        {
+            GameObject newWeaponInstance = Instantiate(newGun);
+
+            newWeaponInstance.name = "sword";
+            newWeaponInstance.layer = LayerMask.NameToLayer("Ignore Raycast");
+            // 🔧 Position it using sword_mount
+            newWeaponInstance.transform.position = swordMount.position;
+            newWeaponInstance.transform.rotation = swordMount.rotation;
+
+            // 🔧 Parent it directly to sword_holder
+            newWeaponInstance.transform.SetParent(swordMount.parent); // sword_holder
+
+            newWeaponInstance.transform.localScale = Vector3.one; // just to be safe
+            newWeaponInstance.SetActive(false);
+
+            gunSlots[targetSlot] = newWeaponInstance;
+            Equip(targetSlot);
+
+            // 🔧 Hook up the hitbox
+            SwordAttack swordAttack = swordMount.parent.GetComponent<SwordAttack>();
+            if (swordAttack != null)
+            {
+                SwordHitbox hitbox = newWeaponInstance.GetComponentInChildren<SwordHitbox>();
+                if (hitbox != null)
+                {
+                    swordAttack.hitbox = hitbox;
+                    Debug.Log("Hooked up SwordHitbox to SwordAttack");
+                }
+                else
+                {
+                    Debug.LogWarning("No SwordHitbox found on sword prefab");
+                }
+            }
         }
-        newGunInstance.SetActive(false); // Don't auto-fire unless equipped
+        else
+        {   Debug.Log("PickupGun called with: " + newGun.name + ", tag: " + newGun.tag);
 
-        gunSlots[targetSlot] = newGunInstance;
-        Equip(targetSlot); // Optional: auto-equip the new gun
+            GameObject newGunInstance = Instantiate(newGun, mount);
+            newGunInstance.layer = LayerMask.NameToLayer("Ignore Raycast");
+            newGunInstance.transform.localPosition = Vector3.zero;
+            newGunInstance.transform.localRotation = Quaternion.identity;
+            if (newGunInstance.CompareTag("Shotgun"))
+            {
+
+                newGunInstance.transform.localRotation = Quaternion.Euler(0f, -90f, 0f); // or whatever fixes it
+            }
+            newGunInstance.SetActive(false); // Don't auto-fire unless equipped
+
+            gunSlots[targetSlot] = newGunInstance;
+            Equip(targetSlot); // Optional: auto-equip the new gun
+
+        }
     }
 
 }

@@ -158,12 +158,12 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3863648171936915127, guid: 8b7834b1820d2464eb988a482a382afb, type: 3}
   firePoint: {fileID: 1826679697202793023}
   muzzleFlash: {fileID: 100008, guid: 7b4c09739930d43458b94e59aa06933a, type: 3}
-  fireRate: 0.2
+  fireRate: 0.3
   shootClip: {fileID: 8300000, guid: d6b8742681828f8468faa25e1288dfd7, type: 3}
   reloadClip: {fileID: 8300000, guid: 94a2eb2c0e0c46b4ab3faa090f2c320b, type: 3}
-  totalAmmo: 150
-  clipAmount: 25
-  clipSize: 25
+  totalAmmo: 300
+  clipAmount: 15
+  clipSize: 15
 --- !u!1001 &1016372515447443908
 PrefabInstance:
   m_ObjectHideFlags: 0
