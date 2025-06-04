@@ -165,7 +165,7 @@ public class player_controller : MonoBehaviour
             crosshairManager.ShowCrosshair(weaponType);
 
             // Try updating the AmmoUI immediately
-            AmmoUI ammoUI = FindObjectOfType<AmmoUI>();
+            AmmoUI ammoUI = Object.FindFirstObjectByType<AmmoUI>();
             var gun = gunSlots[slotIndex];
 
             // Try getting the ammo info
