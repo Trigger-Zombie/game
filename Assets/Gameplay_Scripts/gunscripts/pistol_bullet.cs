@@ -28,7 +28,7 @@ public class pistol_bullet : MonoBehaviour
         return;
     }
     
-        //Debug.Log("Collided with: " + collision.gameObject.name);
+        Debug.Log("Collided with: " + collision.gameObject.name);
         // Directly check if the collided object implements IDamageCapable
         IDamageCapable target = collision.gameObject.GetComponent<IDamageCapable>();
         

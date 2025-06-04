@@ -21,7 +21,7 @@ public class BeamObjective : MonoBehaviour
 
             if (CoinManager.Instance != null)
             {
-                CoinManager.Instance.AddCoin(50);
+                CoinManager.Instance.AddCoin(500);
             }
             else
             {

@@ -3393,7 +3393,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fef05b18a865d24b925447fd3d4b84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyPrefabs: []
+  _enemyPrefabs:
+  - {fileID: 4694723745877832577, guid: a75dc97686b76614da6f3cafe82f9c03, type: 3}
 --- !u!4 &368235914
 Transform:
   m_ObjectHideFlags: 0
@@ -5778,11 +5779,6 @@ MonoBehaviour:
   m_IgnoreFromBuild: 0
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
---- !u!4 &661770593 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0b05fb4b37268b743af1ce4a56653f01, type: 3}
-  m_PrefabInstance: {fileID: 2095536802}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &675363376
 GameObject:
   m_ObjectHideFlags: 0
@@ -7030,6 +7026,7 @@ MonoBehaviour:
   player: {fileID: 1594672430}
   FireBallPrefab: {fileID: 158476033408281721, guid: a621edb9444ea9e4e8a6cbb0e2cfd940, type: 3}
   FirePoint: {fileID: 1073126997}
+  AmAlive: {fileID: 0}
   waveManager: {fileID: 0}
 --- !u!4 &783362689 stripped
 Transform:
@@ -8051,7 +8048,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fef05b18a865d24b925447fd3d4b84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyPrefabs: []
+  _enemyPrefabs:
+  - {fileID: 4694723745877832577, guid: a75dc97686b76614da6f3cafe82f9c03, type: 3}
 --- !u!4 &891592765
 Transform:
   m_ObjectHideFlags: 0
@@ -8775,7 +8773,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fef05b18a865d24b925447fd3d4b84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyPrefabs: []
+  _enemyPrefabs:
+  - {fileID: 4694723745877832577, guid: a75dc97686b76614da6f3cafe82f9c03, type: 3}
 --- !u!4 &945032914
 Transform:
   m_ObjectHideFlags: 0
@@ -14722,7 +14721,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fef05b18a865d24b925447fd3d4b84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyPrefabs: []
+  _enemyPrefabs:
+  - {fileID: 4694723745877832577, guid: a75dc97686b76614da6f3cafe82f9c03, type: 3}
 --- !u!4 &1703331705
 Transform:
   m_ObjectHideFlags: 0
@@ -32538,3 +32538,5 @@ SceneRoots:
   - {fileID: 1733661122}
   - {fileID: 863874041}
   - {fileID: 696820272612158096}
+  - {fileID: 215516054}
+  - {fileID: 489161107}

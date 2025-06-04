@@ -62,7 +62,7 @@ public class GhostAi : MonoBehaviour
             // CoinManager coinManager = FindFirstObjectByType<CoinManager>();
             // if (coinManager != null)
             // {
-            CoinManager.Instance.AddCoin(1);
+            CoinManager.Instance.AddCoin(7);
             // Notify WaveManager
             if (AmAlive.waveManager != null)
             {

@@ -430,6 +430,8 @@ GameObject:
   - component: {fileID: 1948263857927994475}
   - component: {fileID: 8902613891598470209}
   - component: {fileID: 9031739291282547389}
+  - component: {fileID: -1767002358982844801}
+  - component: {fileID: 4708637782172765564}
   m_Layer: 0
   m_Name: SciFiGunLight_Black
   m_TagString: Rifle
@@ -525,9 +527,10 @@ MonoBehaviour:
   fireRate: 0.2
   shootClip: {fileID: 8300000, guid: 491cb429a8d10ad4b9c1c6e22c068a7e, type: 3}
   reloadClip: {fileID: 8300000, guid: 94a2eb2c0e0c46b4ab3faa090f2c320b, type: 3}
-  totalAmmo: 150
-  clipAmount: 25
-  clipSize: 25
+  ammoUI: {fileID: 0}
+  totalAmmo: 300
+  clipAmount: 30
+  clipSize: 30
 --- !u!82 &9031739291282547389
 AudioSource:
   m_ObjectHideFlags: 0
@@ -625,6 +628,50 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &-1767002358982844801
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4470248391977660851}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0.000000044703484, y: 0.02280002, z: 0.27416432}
+--- !u!136 &4708637782172765564
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4470248391977660851}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.416143
+  m_Height: 0.31807214
+  m_Direction: 1
+  m_Center: {x: 0.000000044703484, y: 0.02280002, z: 0.27416432}
 --- !u!1 &4795336981554523469
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7731799011797949008}
   - component: {fileID: 2697383167632881110}
+  - component: {fileID: 7375741813089001522}
   m_Layer: 0
   m_Name: firepointrifle
   m_TagString: Untagged
@@ -713,6 +761,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1818360609 &7375741813089001522
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4795336981554523469}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources: []
 --- !u!1 &8500093605716402276
 GameObject:
   m_ObjectHideFlags: 0

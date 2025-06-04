@@ -108,6 +108,8 @@ MonoBehaviour:
   timeManager: {fileID: 0}
   audioSource: {fileID: 1496992955424796267}
   drinkSound: {fileID: 8300000, guid: ec99b3f13f321e64ab197fdcb5a5e7a7, type: 3}
+  shakeDuration: 6
+  shakeIntensity: 0.1
 --- !u!136 &3075029582336363432
 CapsuleCollider:
   m_ObjectHideFlags: 0
