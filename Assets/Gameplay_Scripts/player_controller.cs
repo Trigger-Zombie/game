@@ -26,7 +26,10 @@ public class player_controller : MonoBehaviour
     public MouseLook mouseLookScript;
 
     public Transform swordMount;
-    
+
+    public float jumpForce = 7f;
+    private bool isGrounded = true;
+
 
 
     void Start()
@@ -53,6 +56,12 @@ public class player_controller : MonoBehaviour
         }
         if (Keyboard.current.digit1Key.wasPressedThisFrame) Equip(0);
         if (Keyboard.current.digit2Key.wasPressedThisFrame) Equip(1);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+        }
     }
 
     void OnMove(InputValue movementValue)
@@ -113,7 +122,7 @@ public class player_controller : MonoBehaviour
 
         if (amount > 0)
         {
-            Debug.Log("Took damage: " + amount);
+            //Debug.Log("Took damage: " + amount);
             if (currentHealth <= 0)
             {
                 Debug.Log("Player has died.");
@@ -215,7 +224,8 @@ public class player_controller : MonoBehaviour
             }
         }
         else
-        {   Debug.Log("PickupGun called with: " + newGun.name + ", tag: " + newGun.tag);
+        {
+            Debug.Log("PickupGun called with: " + newGun.name + ", tag: " + newGun.tag);
 
             GameObject newGunInstance = Instantiate(newGun, mount);
             newGunInstance.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -234,4 +244,11 @@ public class player_controller : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
 }

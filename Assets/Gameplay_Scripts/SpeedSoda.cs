@@ -80,7 +80,7 @@ public class SpeedSoda : MonoBehaviour
                     {
                         Debug.Log("Perk granted from soda!");
                         perkGiven = true;
-                        SpeedBoostManager.Instance.perkUnlocked = true;
+                        //SpeedBoostManager.Instance.perkUnlocked = true;
                         perkPromptUI?.SetActive(false);
 
                         Destroy(hit.collider.gameObject); // 💥 Destroy soda

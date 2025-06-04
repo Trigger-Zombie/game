@@ -132,6 +132,12 @@ public class WaveManager : MonoBehaviour
                     {
                         gHit.waveManager = this;
                     }
+                    
+                    TankHitBox tankHit = enemy.GetComponentInChildren<TankHitBox>();
+                    if (tankHit != null)
+                    {
+                        tankHit.waveManager = this;
+                    }
 
                     enemiesAlive++;
                 }

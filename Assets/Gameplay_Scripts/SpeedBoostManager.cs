@@ -1,140 +1,70 @@
+using System.Collections;
 using UnityEngine;
-using TMPro;
 
 public class SpeedBoostManager : MonoBehaviour
 {
-    public static SpeedBoostManager Instance;
+    public float dashForce = 800f;
+    public float dashCooldown = 5f;
+    public int maxCharges = 2;
+    private int currentCharges;
 
-    public bool perkUnlocked = false;
-    public bool perkActive = false;
-    public bool perkReady = false;
+    private bool isDashing = false;
+    private float dashDuration = 0.2f;
+    private float rechargeTimer = 0f;
 
-    public float speedMultiplier = 2f;
-    public float duration = 10f;
-    public float cooldownDuration = 20f;
-
-    private float activeTimer = 0f;
-    private float cooldownTimer = 0f;
-
-    public float readyTextDelay = 0.5f;
-    public float readyUISwitchDelay = 14f;
-
-    private bool hasWarmedUp = false;
-    private bool isWarmingUp = false;
-    private float readyTextTimer = 0f;
-    private float readyUIHoldTimer = 0f;
-
-    public TextMeshProUGUI perkText;
-
+    private Rigidbody rb;
     private player_controller player;
+
+    public static SpeedBoostManager Instance;
 
     void Awake()
     {
-        Instance = this;
-        player = FindFirstObjectByType<player_controller>();
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     void Start()
     {
-        if (perkText != null)
-            perkText.text = "Speed Boost: Locked";
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        player = playerObj.GetComponent<player_controller>();
+        rb = playerObj.GetComponent<Rigidbody>();
+        currentCharges = maxCharges;
     }
 
     void Update()
     {
-        if (!perkUnlocked)
+        // Recharge dash charges
+        if (currentCharges < maxCharges)
         {
-            if (perkText != null)
-                perkText.text = "Speed Boost: Locked";
-            return;
+            rechargeTimer += Time.deltaTime;
+            if (rechargeTimer >= dashCooldown)
+            {
+                currentCharges++;
+                rechargeTimer = 0f;
+                Debug.Log("Dash charge replenished. Charges: " + currentCharges);
+            }
         }
 
-        if (!hasWarmedUp)
+        // Dash with Left Shift
+        if (Input.GetKeyDown(KeyCode.LeftShift) && currentCharges > 0 && !isDashing)
         {
-            if (!isWarmingUp)
-                StartWarmUp();
-
-            if (perkText != null)
-                perkText.text = "Speed Boost: Locked";
-
-            if (readyTextTimer > 0f)
-            {
-                readyTextTimer -= Time.deltaTime;
-            }
-            else if (readyUIHoldTimer > 0f)
-            {
-                readyUIHoldTimer -= Time.deltaTime;
-            }
-            else
-            {
-                isWarmingUp = false;
-                hasWarmedUp = true;
-                perkReady = true;
-
-                if (perkText != null)
-                    perkText.text = "Speed Boost: Ready";
-            }
-
-            return;
-        }
-
-        if (perkActive)
-        {
-            activeTimer -= Time.deltaTime;
-            if (perkText != null)
-                perkText.text = $"Speed Boost: {Mathf.CeilToInt(activeTimer)}s";
-
-            if (activeTimer <= 0f)
-            {
-                perkActive = false;
-                cooldownTimer = cooldownDuration;
-                player.speed /= speedMultiplier;
-
-                if (perkText != null)
-                    perkText.text = $"Speed Boost: {Mathf.CeilToInt(cooldownTimer)}s";
-            }
-
-            return;
-        }
-
-        if (cooldownTimer > 0f)
-        {
-            cooldownTimer -= Time.deltaTime;
-            if (perkText != null)
-                perkText.text = $"Speed Boost: {Mathf.CeilToInt(cooldownTimer)}s";
-
-            if (cooldownTimer <= 0f)
-            {
-                perkReady = true;
-                if (perkText != null)
-                    perkText.text = "Speed Boost: Ready";
-            }
-
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z) && perkReady)
-        {
-            ActivatePerk();
+            Debug.Log("Dash triggered!");
+            StartCoroutine(DashForward());
         }
     }
 
-    public void ActivatePerk()
+    private IEnumerator DashForward()
     {
-        perkActive = true;
-        perkReady = false;
-        activeTimer = duration;
+        isDashing = true;
+        currentCharges--;
 
-        player.speed *= speedMultiplier;
+        Vector3 dashDirection = player.transform.forward;
+        rb.AddForce(dashDirection * dashForce, ForceMode.VelocityChange);
 
-        if (perkText != null)
-            perkText.text = $"Speed Boost: {duration}s";
-    }
+        yield return new WaitForSeconds(dashDuration);
 
-    public void StartWarmUp()
-    {
-        isWarmingUp = true;
-        readyTextTimer = readyTextDelay;
-        readyUIHoldTimer = readyUISwitchDelay;
+        isDashing = false;
     }
 }

@@ -118,7 +118,7 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // Award coin and notify wave manager
-        CoinManager.Instance?.AddCoin(1);
+        CoinManager.Instance?.AddCoin(5);
         if (waveManager != null)
         {
             waveManager.EnemyDied();

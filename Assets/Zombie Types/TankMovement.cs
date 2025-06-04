@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class TankMovement : MonoBehaviour
 {
-    private GameObject destination;
+    //private GameObject destination;
     private NavMeshAgent agent;
     private Animator tankAnimator;
     public Transform player; // Assign your Player transform in the Inspector
@@ -27,10 +27,10 @@ public class TankMovement : MonoBehaviour
 
     void Start()
     {
-        destination = GameObject.FindGameObjectWithTag("Player");
+        //destination = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
         tankAnimator = GetComponent<Animator>();
-        playerController = player.GetComponent<player_controller>();
+        //playerController = player.GetComponent<player_controller>();
         AmAlive = GetComponent<TankHitBox>(); // Get the TankHitBox component from this GameObject ("HUGO")
         hitDetect = GetComponent<TankHitDetect>();
         if (hitDetect == null)
@@ -43,6 +43,7 @@ public class TankMovement : MonoBehaviour
             enabled = false; // Critical component missing, disable script
             return;
         }
+        /*
         if (player == null && destination != null)
         {
             player = destination.transform; // Fallback if player public Transform not set
@@ -52,8 +53,22 @@ public class TankMovement : MonoBehaviour
             Debug.LogError("Player Transform not set and GameObject with tag 'Player' not found!");
             enabled = false; // Disable script if no target
             return;
+        } */
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            else
+            {
+                Debug.LogError("Player not found!");
+                enabled = false;
+                return;
+            }
         }
-
+        playerController = player.GetComponent<player_controller>();
         if (agent == null)
         {
             Debug.LogError("NavMeshAgent component not found on this GameObject!");
@@ -84,7 +99,7 @@ public class TankMovement : MonoBehaviour
             // CoinManager coinManager = FindFirstObjectByType<CoinManager>();
             // if (coinManager != null)
             // {
-            CoinManager.Instance.AddCoin(1);
+            CoinManager.Instance.AddCoin(10);
             // Notify WaveManager
             if (AmAlive.waveManager != null)
             {
@@ -98,7 +113,7 @@ public class TankMovement : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        if (player == null || destination == null) // Check if target is still valid
+        if (player == null) //|| destination == null) // Check if target is still valid
         {
             // Optionally, handle target loss (e.g., go to idle, search)
             if (agent.isOnNavMesh) agent.isStopped = true;
@@ -130,8 +145,15 @@ public class TankMovement : MonoBehaviour
 
             }
             // Always update destination if not slamming, NavMeshAgent will move if speed > 0
-            if (agent.isOnNavMesh) agent.SetDestination(destination.transform.position);
-        }
+            //if (agent.isOnNavMesh) agent.SetDestination(destination.transform.position);
+            if (player == null)
+            {
+                if (agent.isOnNavMesh) agent.isStopped = true;
+                return;
+            }
+            if (agent.isOnNavMesh) agent.isStopped = false;
+            agent.SetDestination(player.position);
+                    }
     }
 
     private void RotateTowards(Vector3 targetPosition, float speed)
