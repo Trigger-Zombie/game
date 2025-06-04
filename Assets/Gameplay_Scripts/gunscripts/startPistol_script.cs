@@ -16,7 +16,8 @@ public class startPistol_script : MonoBehaviour
     public AudioClip reloadClip; // Reloading sound
 
     private AudioSource audioSource;
-
+    public AmmoUI ammoUI;
+    public bool isReloading = false;
     public float totalAmmo = 150f;
     public float clipAmount = 25f;
     public float clipSize = 25f;
@@ -38,10 +39,12 @@ public class startPistol_script : MonoBehaviour
                 nextTimeToFire = Time.unscaledTime + fireRate;
                 clipAmount -= 1;
                 Shoot();
+                ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
             }
             else
             {
                 Debug.Log("Out of ammo in clip. Press R to reload.");
+                TutorialManager.Instance?.OnPlayerOutOfAmmo();
             }
         }
 
@@ -49,6 +52,11 @@ public class startPistol_script : MonoBehaviour
         {
             Reload();
         }
+    }
+
+    public (int current, int total) GetAmmo()
+    {
+        return ((int)clipAmount, (int)totalAmmo);
     }
 
     void Shoot()
@@ -86,11 +94,24 @@ public class startPistol_script : MonoBehaviour
         if (reloadClip != null && audioSource != null)
         {
             audioSource.PlayOneShot(reloadClip);
+            StartCoroutine(UpdateAmmoUIAfterDelay(reloadClip.length));
+        }
+        else if (ammoUI != null)
+        {
+            ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
         }
 
+
         Debug.Log("Reloaded. Clip: " + clipAmount + ", Total Ammo: " + totalAmmo);
+        FindObjectOfType<TutorialManager>().OnPlayerReloaded();
     }
 
+    private IEnumerator UpdateAmmoUIAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (ammoUI != null)
+            ammoUI.UpdateAmmo((int)clipAmount, (int)totalAmmo);
+    }
     private IEnumerator MuzzleFlashRoutine()
     {
         muzzleFlash.SetActive(true);

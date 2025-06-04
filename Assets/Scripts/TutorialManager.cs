@@ -4,158 +4,166 @@ using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static TutorialManager Instance;
+
     [Header("Tutorial Hints")]
     public GameObject movementHint;
-    public GameObject shootingHint;
     public GameObject reloadHint;
+    public GameObject reloadNowHint;
     public GameObject slowMoHint;
-    
-    [Header("Tutorial Settings")]
+
+    [Header("Settings")]
     public float hintDisplayTime = 5f;
     public float fadeTime = 0.5f;
-    
-    [Header("Tutorial Triggers")]
-    public bool showMovementOnStart = true;
-    public bool hasShownShooting = false;
-    public bool hasShownReload = false;
-    public bool hasShownSlowMo = false;
-    
-    private player_controller playerController;
-    private riflescript rifleScript; 
-    private shotgunScript shotgunScript;
-    
+
+    [Header("State Flags")]
+    private bool movementHintActive = false;
+    private bool hasShownReloadHint = false;
+    private bool hasShownSlowMoHint = false;
+    private bool isShowingReloadHint = false;
+    private bool isPlayerMoving = false;
+    private bool isOutOfAmmo = false;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
     void Start()
     {
-        // Hide all hints initially
         HideAllHints();
-        
-        // Find player components (adjust these to match your script names)
-        playerController = FindObjectOfType<player_controller>();
-        rifleScript = FindObjectOfType<riflescript>();
-        shotgunScript = FindObjectOfType<shotgunScript>();
-        
-        // Show movement hint at start
-        if (showMovementOnStart)
-        {
-            StartCoroutine(ShowHintForTime(movementHint, hintDisplayTime));
-        }
+
+        ShowHintPersistent(movementHint);
+        movementHintActive = true;
     }
-    
+
     void Update()
     {
-        CheckForTutorialTriggers();
+        if (movementHintActive && DetectPlayerMovement())
+        {
+            HideHintImmediate(movementHint);
+            movementHintActive = false;
+        }
     }
-    
-    void CheckForTutorialTriggers()
+
+    // Detect WASD input
+    private bool DetectPlayerMovement()
     {
-        // Show shooting hint when zombies appear or after movement
-        if (!hasShownShooting && ShouldShowShootingHint())
+        return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
+    }
+
+    public void OnPlayerMoved()
+    {
+        if (movementHintActive)
         {
-            StartCoroutine(ShowHintForTime(shootingHint, hintDisplayTime));
-            hasShownShooting = true;
+            HideHintImmediate(movementHint);
+            movementHintActive = false;
         }
-        
-        // Show reload hint when ammo is low
-        if (!hasShownReload && ShouldShowReloadHint())
+    }
+
+    // public void OnPlayerOutOfAmmo()
+    // {
+    //     if (!hasShownReloadHint)
+    //     {
+    //         StartCoroutine(ShowHintForTime(reloadHint, hintDisplayTime));
+    //         hasShownReloadHint = true;
+    //     }
+    //     else
+    //     {
+    //         ShowHintPersistent(reloadNowHint);
+    //     }
+    // }
+    public void OnPlayerOutOfAmmo()
+    {
+
+        if (isOutOfAmmo) return;
+        isOutOfAmmo = true;
+
+        if (!hasShownReloadHint && !isShowingReloadHint)
         {
-            StartCoroutine(ShowHintForTime(reloadHint, hintDisplayTime));
-            hasShownReload = true;
+            StartCoroutine(ShowReloadHintOnceThenAlwaysShowReloadText());
         }
-        
-        // Show slow-mo hint during intense moments
-        if (!hasShownSlowMo && ShouldShowSlowMoHint())
+        else
+        {
+            ShowHintPersistent(reloadNowHint);
+        }
+    }
+
+    public void OnPlayerReloaded()
+    {
+        HideHintImmediate(reloadNowHint);
+    }
+
+    public void OnPowerupAcquired()
+    {
+        if (!hasShownSlowMoHint)
         {
             StartCoroutine(ShowHintForTime(slowMoHint, hintDisplayTime));
-            hasShownSlowMo = true;
+            hasShownSlowMoHint = true;
         }
     }
-    
-    bool ShouldShowShootingHint()
+
+    IEnumerator ShowReloadHintOnceThenAlwaysShowReloadText()
     {
-        // Show after 3 seconds or when zombies spawn
-        return Time.time > 3f;
+        isShowingReloadHint = true;
+        yield return StartCoroutine(ShowHintForTime(reloadHint, hintDisplayTime));
+
+        hasShownReloadHint = true;
+        isShowingReloadHint = false;
+
+        ShowHintPersistent(reloadNowHint);
     }
-    
-    bool ShouldShowReloadHint()
-    {
-        // Check both weapon scripts for low ammo (30% or less)
-        
-        // For rifle - check if current active weapon is rifle and ammo is low
-        if (rifleScript != null && rifleScript.gameObject.activeInHierarchy)
-        {
-            return rifleScript.clipAmount <= rifleScript.clipSize * 0.3f;
-        }
-        
-        // For shotgun - check if current active weapon is shotgun and ammo is low
-        if (shotgunScript != null && shotgunScript.gameObject.activeInHierarchy)
-        {
-            return shotgunScript.clipAmount <= shotgunScript.clipSize * 0.3f;
-        }
-        
-        return Time.time > 10f; // Fallback: show after 10 seconds
-    }
-    
-    bool ShouldShowSlowMoHint()
-    {
-        // Show when surrounded by enemies or after some time
-        return Time.time > 20f; // Show after 20 seconds
-    }
-    
     IEnumerator ShowHintForTime(GameObject hint, float duration)
     {
-        // Fade in
         yield return StartCoroutine(FadeHint(hint, 0f, 1f));
-        
-        // Wait
         yield return new WaitForSeconds(duration);
-        
-        // Fade out
         yield return StartCoroutine(FadeHint(hint, 1f, 0f));
-        
         hint.SetActive(false);
     }
-    
-    IEnumerator FadeHint(GameObject hint, float startAlpha, float endAlpha)
+
+    void ShowHintPersistent(GameObject hint)
     {
         hint.SetActive(true);
-        CanvasGroup canvasGroup = hint.GetComponent<CanvasGroup>();
-        
-        if (canvasGroup == null)
+        CanvasGroup cg = hint.GetComponent<CanvasGroup>();
+        if (cg == null) cg = hint.AddComponent<CanvasGroup>();
+        cg.alpha = 1f;
+    }
+
+    void HideHintImmediate(GameObject hint)
+    {
+        CanvasGroup cg = hint.GetComponent<CanvasGroup>();
+        if (cg == null) return;
+        cg.alpha = 0f;
+        hint.SetActive(false);
+    }
+
+    IEnumerator FadeHint(GameObject hint, float from, float to)
+    {
+        hint.SetActive(true);
+        CanvasGroup cg = hint.GetComponent<CanvasGroup>();
+        if (cg == null) cg = hint.AddComponent<CanvasGroup>();
+
+        float t = 0f;
+        while (t < fadeTime)
         {
-            canvasGroup = hint.AddComponent<CanvasGroup>();
-        }
-        
-        float elapsedTime = 0f;
-        
-        while (elapsedTime < fadeTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / fadeTime);
-            canvasGroup.alpha = alpha;
+            t += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(from, to, t / fadeTime);
             yield return null;
         }
-        
-        canvasGroup.alpha = endAlpha;
+
+        cg.alpha = to;
     }
-    
+
     void HideAllHints()
     {
         movementHint.SetActive(false);
-        shootingHint.SetActive(false);
         reloadHint.SetActive(false);
+        reloadNowHint.SetActive(false);
         slowMoHint.SetActive(false);
-    }
-    
-    // Public methods to manually trigger hints
-    public void ShowMovementHint()
-    {
-        if (!hasShownShooting)
-            StartCoroutine(ShowHintForTime(movementHint, hintDisplayTime));
-    }
-    
-    public void ShowReloadHintNow()
-    {
-        StartCoroutine(ShowHintForTime(reloadHint, hintDisplayTime));
-        hasShownReload = true;
     }
 }

@@ -14,6 +14,7 @@ TagManager:
   - Rifle
   - Shotgun
   - Soda
+  - Pistol
   layers:
   - Default
   - TransparentFX
