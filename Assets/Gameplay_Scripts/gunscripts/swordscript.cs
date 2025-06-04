@@ -5,10 +5,14 @@ public class SwordAttack : MonoBehaviour
 {
     private Animator anim;
     public SwordHitbox hitbox; // Assign in Inspector
+    public AudioClip shootClip;
+
+    private AudioSource audioSource;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -17,6 +21,7 @@ public class SwordAttack : MonoBehaviour
         {
             anim.Play("sword_swing", 0, 0f);
             StartCoroutine(ActivateHitboxTemporarily(0.2f, 0.3f)); // Adjust timing
+            audioSource.PlayOneShot(shootClip);
         }
     }
 
